@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) {
         // Replace these with your actual MySQL database details
         String url = "jdbc:mysql://localhost:3306/evaluationmap";
-        String username = "your_username";
-        String password = "your_password";
+        String username = "root";
+        String password = "";
 
         // Attempt to connect to the database
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
