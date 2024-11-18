@@ -1,26 +1,40 @@
-package org.example;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
-        // Replace these with your actual MySQL database details
-        String url = "jdbc:mysql://localhost:3306/evaluationmap";
+        // Database credentials
+        String url = "jdbc:mariadb://192.168.1.222:3306/evaluationmap";
         String username = "root";
         String password = "";
 
-        // Attempt to connect to the database
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            if (connection != null) {
-                System.out.println("Connected to the database successfully!");
-            } else {
-                System.out.println("Failed to make a connection!");
+        // Establish connection to the database
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            System.out.println("Connected to MariaDB!");
+
+            // Create a statement
+            Statement stmt = conn.createStatement();
+
+            // Example query to retrieve data
+            ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String password2 = rs.getString("password"); // Included but not printed
+                System.out.println("--------------------------");
+                System.out.println("ID: " + id);
+                System.out.println("Name: " + name);
+                System.out.println("Email: " + email);
             }
+            System.out.println("Query completed!");
+
         } catch (SQLException e) {
-            System.out.println("An error occurred while connecting to the database:");
-            e.printStackTrace();
+            System.out.println("Connection failed: " + e.getMessage());
         }
     }
 }
