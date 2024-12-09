@@ -90,7 +90,7 @@ public class LoginPage extends JDialog {
         setVisible(true);
     }
 
-    private User getAuthenticatedUser(String email, String password) {
+    public User getAuthenticatedUser(String email, String password) {
         User user = null;
 
         final String DB_URL = "jdbc:mariadb://192.168.43.151:3306/evaluationmap";
@@ -110,6 +110,7 @@ public class LoginPage extends JDialog {
                     user = new User();
                     user.setEmail(rs.getString("email"));
                     user.setName(rs.getString("name"));
+                    user.setDirector(rs.getInt("director"));
                 }
             }
         } catch (SQLException e) {

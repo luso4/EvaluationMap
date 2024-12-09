@@ -31,13 +31,20 @@ public class Options extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         // Display the user's name
+        String status = "Department Director";
+        if (user.getDirector() == 0)
+        {
+            status = "Course Coordinator";
+        }
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel1.add(new JLabel("Welcome, " + user.getName() + "!"), gbc); // Example of using user data
+        panel1.add(new JLabel("Welcome, " + status + " " + user.getName()), gbc); // Example of using user data
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel1.add(UserManagement, gbc);
+        if (user.getDirector() == 1) {
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            panel1.add(UserManagement, gbc);
+        }
 
         gbc.gridy = 2;
         panel1.add(Calendar, gbc);
@@ -51,8 +58,8 @@ public class Options extends JFrame {
 
         // Action listener for UserManagement button
         UserManagement.addActionListener(e -> {
-            // Handle Option 1 action (e.g., show some action related to Option 1)
-            JOptionPane.showMessageDialog(this, "Option 1 clicked");
+            new SignInPage(user);
+            dispose();
         });
 
         // Action listener for Option2 button
@@ -60,6 +67,8 @@ public class Options extends JFrame {
             // Handle Option 1 action (e.g., show some action related to Option 1)
             JOptionPane.showMessageDialog(this, "Option 2 clicked");
         });
+
+        // Add where the Calendar
         Exit.addActionListener(e -> {
             // Handle Cancel action (e.g., close the Options form)
             dispose();  // Close the Options form when Cancel is clicked
