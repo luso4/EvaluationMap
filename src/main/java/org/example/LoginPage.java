@@ -43,10 +43,10 @@ public class LoginPage extends JDialog {
         gbc.gridx = 1;
         panel1.add(passwordField, gbc);
 
-        gbc.gridx = 1;
+        gbc.gridx = 0;
         gbc.gridy = 2;
         panel1.add(logginButton, gbc);
-        gbc.gridx = 0;
+        gbc.gridx = 1;
         panel1.add(cancelButton, gbc);
 
         // Set the content pane
@@ -71,6 +71,9 @@ public class LoginPage extends JDialog {
                 user = getAuthenticatedUser(email, password);
 
                 if (user != null) {
+
+                    //here call the HomePage/Options
+                    new Options(user);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
@@ -87,7 +90,7 @@ public class LoginPage extends JDialog {
         setVisible(true);
     }
 
-    private User getAuthenticatedUser(String email, String password) {
+    public User getAuthenticatedUser(String email, String password) {
         User user = null;
 
         final String DB_URL = "jdbc:mariadb://192.168.43.151:3306/evaluationmap";
@@ -107,6 +110,7 @@ public class LoginPage extends JDialog {
                     user = new User();
                     user.setEmail(rs.getString("email"));
                     user.setName(rs.getString("name"));
+                    user.setDirector(rs.getInt("director"));
                 }
             }
         } catch (SQLException e) {

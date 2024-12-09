@@ -7,6 +7,7 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -14,7 +15,13 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
-
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.mockito:mockito-core:4.1.0'
+    testImplementation 'org.assertj:assertj-swing:3.18.0'
+    testImplementation 'org.mariadb.jdbc:mariadb-java-client:3.0.7'
+    testImplementation 'org.assertj:assertj-core:3.24.2'  // Update AssertJ core
+    testImplementation 'org.assertj:assertj-swing:3.18.1'
 }
 
 test {
