@@ -26,11 +26,20 @@ public class Main {
                 String name = rs.getString("name");
                 String email = rs.getString("email");
                 String password2 = rs.getString("password"); // Included but not printed
+                int director = rs.getInt("director");
                 System.out.println("--------------------------");
                 System.out.println("ID: " + id);
                 System.out.println("Name: " + name);
                 System.out.println("Email: " + email);
                 System.out.println("Password: " + password2);
+                if (director != 0)
+                {
+                    System.out.println("Department Director");
+                }
+                else
+                {
+                    System.out.println("Course Coordinator");
+                }
             }
             System.out.println("Query completed!");
 

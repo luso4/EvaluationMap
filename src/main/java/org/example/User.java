@@ -3,9 +3,11 @@ package org.example;
 public class User {
     private String email;
     private String name;
+    private int director;
 
     // Default constructor
-    public User() {}
+    public User() {
+    }
 
     // Getters and Setters
     public String getEmail() {
@@ -23,4 +25,13 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getDirector() {
+        return director;
+    }
+
+    public void setDirector(int director) {
+        this.director = director;
+    }
+
 }
