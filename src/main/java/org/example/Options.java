@@ -26,11 +26,9 @@ public class Options extends JFrame {
         Calendar = new JButton("Calendar");
         Exit = new JButton("Sign Off");
 
-        // Add components to the panel
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Display the user's name
         String status = "Department Director";
         if (user.getDirector() == 0)
         {
@@ -52,29 +50,25 @@ public class Options extends JFrame {
         gbc.gridy = 3;
         panel1.add(Exit, gbc);
 
-        // Set the content pane
         setContentPane(panel1);
         setMinimumSize(new Dimension(400, 200));
 
         // Action listener for UserManagement button
         UserManagement.addActionListener(e -> {
-            new SignInPage(user);
+            new UserManagement(user);
             dispose();
         });
 
-        // Action listener for Option2 button
+        // Action listener for Calendar button
         Calendar.addActionListener(e -> {
-            // Handle Option 1 action (e.g., show some action related to Option 1)
             JOptionPane.showMessageDialog(this, "Option 2 clicked");
         });
 
-        // Add where the Calendar
+        // Add Exit button
         Exit.addActionListener(e -> {
-            // Handle Cancel action (e.g., close the Options form)
-            dispose();  // Close the Options form when Cancel is clicked
+            dispose();
         });
 
-        // Set the window visible
         setVisible(true);
     }
 

@@ -25,13 +25,12 @@ public class LoginPage extends JDialog {
         logginButton = new JButton("Login");
         cancelButton = new JButton("Cancel");
 
-        // Add components to panel
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel1.add(new JLabel("Username:"), gbc);
+        panel1.add(new JLabel("Email:"), gbc);
 
         gbc.gridx = 1;
         panel1.add(userField, gbc);
@@ -49,7 +48,6 @@ public class LoginPage extends JDialog {
         gbc.gridx = 1;
         panel1.add(cancelButton, gbc);
 
-        // Set the content pane
         setContentPane(panel1);
         setMinimumSize(new Dimension(400, 200));
         setModal(true);

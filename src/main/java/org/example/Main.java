@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) {
         // Database credentials
-        String url = "jdbc:mariadb://192.168.43.151:3306/evaluationmap"; // Watch out with the IP address 40381
+        String url = "jdbc:mariadb://192.168.1.232:3306/evaluationmap"; // Watch out with the IP address 40381
         String username = "root";
         String password = "";
 
