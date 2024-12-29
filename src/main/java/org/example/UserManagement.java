@@ -61,6 +61,7 @@ public class UserManagement extends JFrame {
         });
 
         Exit.addActionListener(e -> {
+            new Options(user);
             dispose();
         });
 

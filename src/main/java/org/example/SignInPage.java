@@ -37,7 +37,7 @@ public class SignInPage extends JDialog {
         courseField = new JTextField(20);
         mixedCheckBox = new JCheckBox("Mixed");
         signInButton = new JButton("Sign Up");
-        homePageButton = new JButton("Home Page");
+        homePageButton = new JButton("User Management");
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -103,7 +103,7 @@ public class SignInPage extends JDialog {
         signInButton.addActionListener(e -> handleSignUp());
 
         homePageButton.addActionListener(e -> {
-            new Options(user);
+            new UserManagement(user);
             dispose();
         });
 
@@ -148,7 +148,7 @@ public class SignInPage extends JDialog {
     }
 
     private boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed) {
-        final String DB_URL = "jdbc:mariadb://192.168.43.151:3306/evaluationmap";
+        final String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
         final String DB_USER = "root";
         final String DB_PASS = "";
 
