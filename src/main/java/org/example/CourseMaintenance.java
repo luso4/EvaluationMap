@@ -28,7 +28,7 @@ public class CourseMaintenance extends JFrame {
         panel1 = new JPanel(new GridBagLayout());
         UserManagement = new JButton("User Management");
         Calendar = new JButton("Calendar");
-        Exit = new JButton("Sign Off");
+        Exit = new JButton("Options");
         addButton = new JButton("Add Course");
         removeButton = new JButton("Remove Course");
         emailLabel = new JLabel("Email:");
@@ -38,13 +38,13 @@ public class CourseMaintenance extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel1.add(new JLabel("Select the email of the user " ), gbc); // Example of using user data
+        panel1.add(new JLabel("Select the email of the user "), gbc); // Example of using user data
 
 
         gbc.gridy = 1;
         // Create and populate the JComboBox with emails from the database
         emailComboBox = new JComboBox<>();
-        populateEmailComboBox();
+        //populateEmailComboBox();
         gbc.gridx = 0;
         panel1.add(emailComboBox, gbc);
 
@@ -80,7 +80,7 @@ public class CourseMaintenance extends JFrame {
         });
 
         // Action listener for Add button
-        addButton.addActionListener(e -> {
+         addButton.addActionListener(e -> {
 
                 // Create a panel for the input and checkbox
                 JPanel inputPanel = new JPanel();
@@ -102,7 +102,7 @@ public class CourseMaintenance extends JFrame {
                     boolean isMixed = mixedCheckBox.isSelected();
                     String selectedEmail = (String) emailComboBox.getSelectedItem();
                     if (!courseName.isEmpty()) {
-                        addCourseToUser(selectedEmail, courseName, isMixed);
+                        //addCourseToUser(selectedEmail, courseName, isMixed);
                         emailComboBox.addItem(courseName);
                     }
                 }
@@ -186,13 +186,15 @@ public class CourseMaintenance extends JFrame {
 
             ArrayList<String> emails = new ArrayList<>();
             while (rs.next()) {
-                emails.add(rs.getString("email"));
+                String email =rs.getString("email");
             }
 
+            //Need to check why isnt getting the values from the database
+            /*
             for (String email : emails) {
                 emailComboBox.addItem(email);
             }
-
+        */
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(panel1, "Failed to fetch emails from the database.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -238,6 +240,5 @@ public class CourseMaintenance extends JFrame {
             JOptionPane.showMessageDialog(panel1, "Failed to remove course.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
 }
