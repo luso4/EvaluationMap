@@ -10,7 +10,7 @@ public class Main {
         String url = "jdbc:mariadb://192.168.1.248:3306/evaluationmap"; // Watch out with the IP address 40381
         String username = "root";
         String password = "";
-        //teste2
+        //teste3
         // Establish connection to the database
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
             System.out.println("Connected to MariaDB!");
