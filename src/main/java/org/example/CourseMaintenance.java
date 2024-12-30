@@ -189,7 +189,7 @@ public class CourseMaintenance extends JFrame {
                 String email =rs.getString("email");
             }
 
-            //Need to check why isnt getting the values from the database
+            //Need to check why isnt getting the values from the databasegit config --get user.name
             /*
             for (String email : emails) {
                 emailComboBox.addItem(email);
