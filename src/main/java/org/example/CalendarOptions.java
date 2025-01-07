@@ -5,9 +5,9 @@ import java.awt.*;
 
 public class CalendarOptions extends JFrame {
     private JPanel panel1;
-    private JButton CalendarSemester; //Button to redirect to Manager new user
-    private JButton CalendarCourse; // Button to redirect to Calendar
-    private JButton Exit; // Sign Off Button
+    public JButton CalendarSemester; //Button to redirect to Manager new user
+    public JButton CalendarCourse; // Button to redirect to Calendar
+    public JButton Exit; // Sign Off Button
     public User user;
 
     public CalendarOptions(User user) {

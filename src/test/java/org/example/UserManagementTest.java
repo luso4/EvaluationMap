@@ -5,12 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;  // Add this import
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserManagementTest {
 
@@ -46,14 +42,14 @@ public class UserManagementTest {
 
     @Test
     public void testAssociateCourseButton() {
-        JButton signInButton = (JButton) userManagement.getPanel1().getComponent(2);
-        assertEquals("Associate course", signInButton.getText());
+        JButton courseButton = (JButton) userManagement.getPanel1().getComponent(2);
+        assertEquals("Associate course", courseButton.getText());
     }
 
     @Test
     public void testReturnButton() {
-        JButton signInButton = (JButton) userManagement.getPanel1().getComponent(3);
-        assertEquals("Return to Options", signInButton.getText());
+        JButton exitButton = (JButton) userManagement.getPanel1().getComponent(3);
+        assertEquals("Return to Options", exitButton.getText());
     }
 
     @Test
@@ -97,5 +93,4 @@ public class UserManagementTest {
         exitButton.doClick();
         verify(options, times(1)).setVisible(true);
     }
-
 }

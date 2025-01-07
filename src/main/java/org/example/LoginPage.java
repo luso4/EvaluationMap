@@ -54,7 +54,7 @@ public class LoginPage extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-
+        // Log in button action
         logginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -62,22 +62,23 @@ public class LoginPage extends JDialog {
                 String password = new String(passwordField.getPassword());
 
                 if (email.isEmpty() || password.isEmpty()) {
-                    JOptionPane.showMessageDialog(LoginPage.this, "Please enter both email and password.", "Error", JOptionPane.WARNING_MESSAGE);
+                    showErrorMessage("Please enter both email and password."); //JSL 07-01-2025
                     return;
                 }
 
                 user = getAuthenticatedUser(email, password);
 
                 if (user != null) {
-
-                    //here call the HomePage/Options
+                    // Here call the HomePage/Options
                     new Options(user);
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(LoginPage.this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+                    showErrorMessage("Invalid username or password"); //JSL 07-01-2025
                 }
             }
         });
+
+        // Cancel button action
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,6 +89,12 @@ public class LoginPage extends JDialog {
         setVisible(true);
     }
 
+    // Add a separate method to show error messages. This will allow us to mock it in tests.
+    public void showErrorMessage(String message) { //JSL 07-01-2025
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.WARNING_MESSAGE);
+    }
+
+    // Get the authenticated user from the database
     public User getAuthenticatedUser(String email, String password) {
         User user = null;
 
@@ -113,23 +120,21 @@ public class LoginPage extends JDialog {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database connection error. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Database connection error. Please try again."); //JSL 07-01-2025
         }
 
         return user;
     }
 
+    // Main method to run the login page
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
                 LoginPage loginPage = new LoginPage(null);
                 User user = loginPage.user;
-                if (user != null)
-                {
-                    System.out.println("Successfully logged in of: " + user.getEmail());
-                }
-                else
-                {
+                if (user != null) {
+                    System.out.println("Successfully logged in as: " + user.getEmail());
+                } else {
                     System.out.println("Failed to log in.");
                 }
             } catch (Exception e) {

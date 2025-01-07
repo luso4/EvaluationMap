@@ -35,10 +35,11 @@ public class OptionsTest {
 
         options = new Options(user);
 
-        // Access the buttons by their reference
-        UserManagement = (JButton) options.getPanel1().getComponent(1);
-        Calendar = (JButton) options.getPanel1().getComponent(2);
-        Exit = (JButton) options.getPanel1().getComponent(3);
+        // Access the buttons by their reference from panel1
+        //JSL 01-07-2025
+        UserManagement = (JButton) options.panel1.getComponent(1); // Accessing panel1 directly
+        Calendar = (JButton) options.panel1.getComponent(2);
+        Exit = (JButton) options.panel1.getComponent(3);
 
         // Add the mock action listener to the buttons
         UserManagement.addActionListener(mockActionListener);
@@ -46,10 +47,9 @@ public class OptionsTest {
         Exit.addActionListener(mockActionListener);
     }
 
-
     @Test
     public void testStatusLabel() {
-        JLabel statusLabel = (JLabel) options.getPanel1().getComponent(0);
+        JLabel statusLabel = (JLabel) options.panel1.getComponent(0);
         String expectedLabel = "Welcome, Department Director Director Test";
         assertEquals(expectedLabel, statusLabel.getText());
     }
@@ -69,7 +69,7 @@ public class OptionsTest {
         assertEquals("Sign Off", Exit.getText());
     }
 
-    //Doesn´t check when the button is pressed
+    // Doesn´t check when the button is pressed
     @Test
     public void testUserManagementButtonAction() {
         ActionEvent actionEvent = mock(ActionEvent.class);
@@ -80,12 +80,13 @@ public class OptionsTest {
         // Verify that the action listener is triggered once
         verify(mockActionListener, times(1)).actionPerformed(actionEvent);
     }
-    /* it in comments and not developed as the button hasn´t been developed in the programm
+
+    /* it in comments and not developed as the button hasn´t been developed in the program
     @Test
     public void testCalendarButtonAction() {
-
     }
     */
+
     @Test
     public void testExitButtonAction() {
         ActionEvent actionEvent = mock(ActionEvent.class);
@@ -93,24 +94,22 @@ public class OptionsTest {
         verify(mockActionListener, times(1)).actionPerformed(actionEvent);
     }
 
-
-
     @Test
     public void testStatusLabelForNonDirector() {
-        // Set the director to 0 (non-director) to test the course coordenator
+        // Set the director to 0 (non-director) to test the course coordinator
         user.setName("Coordenator Test");
         user.setDirector(0);
 
         options = new Options(user);
 
-        JLabel statusLabel = (JLabel) options.getPanel1().getComponent(0);
+        JLabel statusLabel = (JLabel) options.panel1.getComponent(0);
 
         // Verify the text of the label
         String expectedLabel = "Welcome, Course Coordinator Coordenator Test";
         assertEquals(expectedLabel, statusLabel.getText());
     }
 
-    // New test to verify if User Management is not visible to the course Coordenator (user.setDirector == 0)
+    // New test to verify if User Management is not visible to the course Coordinator (user.setDirector == 0)
     @Test
     public void testUserManagementButtonNotVisibleForNonDirector() {
         // Set the director to 0 (non-director)
@@ -119,9 +118,9 @@ public class OptionsTest {
         options = new Options(user);
 
         boolean userManagementButtonFound = false;
-        for (int i = 0; i < options.getPanel1().getComponentCount(); i++) {
-            if (options.getPanel1().getComponent(i) instanceof JButton) {
-                JButton button = (JButton) options.getPanel1().getComponent(i);
+        for (int i = 0; i < options.panel1.getComponentCount(); i++) {
+            if (options.panel1.getComponent(i) instanceof JButton) {
+                JButton button = (JButton) options.panel1.getComponent(i);
                 if (button.getText().equals("User Management")) {
                     userManagementButtonFound = true;
                     break;
@@ -129,17 +128,12 @@ public class OptionsTest {
             }
         }
 
-
         assertFalse(userManagementButtonFound, "The User Management button should not be visible for non-directors.");
     }
+
     @Test
     public void testExitButtonActionDisposesFrame() {
         Exit.doClick();
         assertFalse(options.isVisible(), "The frame should be disposed when the exit button is clicked.");
     }
-    // the rest of the buttons don't depend if the user is a course coordenator or a department director so they weren't
-    // tested for the condintion of the user being a course director
-
-
-
 }
