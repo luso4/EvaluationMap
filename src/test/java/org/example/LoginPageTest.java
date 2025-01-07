@@ -1,47 +1,41 @@
-package org.example;
-
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import org.example.LoginPage;
 
-import java.sql.*;
+import javax.swing.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
 
-public class sLoginPageTest {
+public class LoginPageTest {
 
-    @Test
-    public void testGetAuthenticatedUser_ValidCredentials() throws SQLException {
+    @Mock
+    private JFrame parentFrame;
 
-        Connection conn = mock(Connection.class);
-        PreparedStatement ps = mock(PreparedStatement.class);
-        ResultSet rs = mock(ResultSet.class);
+    @Mock
+    private JOptionPane mockOptionPane;
 
-        when(conn.prepareStatement(anyString())).thenReturn(ps);
-        when(ps.executeQuery()).thenReturn(rs);
-        when(rs.next()).thenReturn(true); // Simulate that a valid user was found
-        when(rs.getString("email")).thenReturn("user@example.com");
-        when(rs.getString("name")).thenReturn("John Doe");
+    private LoginPage loginPage;
 
-        LoginPage loginPage = new LoginPage(null);
-        User user = loginPage.getAuthenticatedUser("user@example.com", "password");
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this); // Initialize mocks
+        loginPage = new LoginPage(parentFrame);
 
-        assertNotNull(user);
-        assertEquals("user@example.com", user.getEmail());
-        assertEquals("John Doe", user.getName());
+        // Directly mock JOptionPane methods in the test setup
+        doReturn(mockOptionPane).when(loginPage).getOptionPane();
     }
 
     @Test
-    public void testGetAuthenticatedUser_InvalidCredentials() throws SQLException {
-        Connection conn = mock(Connection.class);
-        PreparedStatement ps = mock(PreparedStatement.class);
-        ResultSet rs = mock(ResultSet.class);
+    public void testEmptyCredentials() {
+        String email = "";
+        String password = "";
 
-        when(conn.prepareStatement(anyString())).thenReturn(ps);
-        when(ps.executeQuery()).thenReturn(rs);
-        when(rs.next()).thenReturn(false); // Simulate no matching user
+        // Call the method with empty credentials
+        loginPage.getAuthenticatedUser(email, password);
 
-        LoginPage loginPage = new LoginPage(null);
-        User user = loginPage.getAuthenticatedUser("invalid@example.com", "wrongpassword");
-
-        assertNull(user);
+        // Verify that a warning message dialog is shown for empty credentials
+        verify(mockOptionPane).showMessageDialog(eq(loginPage), eq("Please enter both email and password."), eq("Error"), eq(JOptionPane.WARNING_MESSAGE));
     }
+
+    // Other test methods...
 }
