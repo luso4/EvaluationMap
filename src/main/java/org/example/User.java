@@ -5,7 +5,7 @@ public class User {
     private String name;
     private int director;
 
-    // Default constructor
+    // Default constructor A
     public User() {
     }
 
