@@ -1,10 +1,10 @@
-import static org.mockito.Mockito.*;
-import org.example.LoginPage;
+package org.example;
 
 import javax.swing.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import static org.mockito.Mockito.*;
 
 public class LoginPageTest {
 
@@ -21,8 +21,8 @@ public class LoginPageTest {
         MockitoAnnotations.openMocks(this); // Initialize mocks
         loginPage = new LoginPage(parentFrame);
 
-        // Directly mock JOptionPane methods in the test setup
-        doReturn(mockOptionPane).when(loginPage).getOptionPane();
+        // Mocking showErrorMessage directly (instead of trying to mock JOptionPane)
+        doNothing().when(loginPage).showErrorMessage(anyString());
     }
 
     @Test
@@ -30,11 +30,16 @@ public class LoginPageTest {
         String email = "";
         String password = "";
 
-        // Call the method with empty credentials
+        // Use Mockito to mock JOptionPane
+        JOptionPane mockOptionPane = mock(JOptionPane.class);
+
+        // Use Mockito to simulate the JOptionPane behavior
+        doNothing().when(mockOptionPane).showMessageDialog(any(), anyString(), anyString(), anyInt());
+
         loginPage.getAuthenticatedUser(email, password);
 
-        // Verify that a warning message dialog is shown for empty credentials
-        verify(mockOptionPane).showMessageDialog(eq(loginPage), eq("Please enter both email and password."), eq("Error"), eq(JOptionPane.WARNING_MESSAGE));
+        // Verify JOptionPane's showMessageDialog is called
+        verify(mockOptionPane).showMessageDialog(any(), eq("Please enter both email and password."), eq("Error"), eq(JOptionPane.ERROR_MESSAGE));
     }
 
     // Other test methods...

@@ -4,10 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Options extends JFrame {
-    private JPanel panel1;
-    private JButton UserManagement; //Button to redirect to Manager new user
-    private JButton Calendar; // Button to redirect to Calendar
-    private JButton Exit; // Sign Off Button
+    public JPanel panel1;
+    public JButton UserManagement; //Button to redirect to Manager new user
+    public JButton Calendar; // Button to redirect to Calendar
+    public JButton Exit; // Sign Off Button
     public User user;
 
     public Options(User user) {

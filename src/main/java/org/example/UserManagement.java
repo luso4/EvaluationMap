@@ -68,5 +68,9 @@ public class UserManagement extends JFrame {
         setVisible(true);
     }
 
+    // Getter for panel1
+    public JPanel getPanel1() {
+        return panel1;
+    }
 
 }

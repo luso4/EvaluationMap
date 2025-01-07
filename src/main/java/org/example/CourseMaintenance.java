@@ -176,7 +176,7 @@ public class CourseMaintenance extends JFrame {
     public String DB_USER = "root";
     public String DB_PASS = "";
     // Method to populate the JComboBox with courses from the database
-    private void populateEmailComboBox() {
+    public void populateEmailComboBox() {
 
         String sql = "SELECT email FROM users";
 
@@ -202,7 +202,7 @@ public class CourseMaintenance extends JFrame {
     }
 
     // Method to add a new email to the database
-    private void addCourseToUser(String email, String course, boolean mixed) {
+    public void addCourseToUser(String email, String course, boolean mixed) {
 
         String sql = "INSERT INTO course (email_course, course_course, Mixed_course) VALUES (?, ?, ?)";
 
@@ -223,7 +223,7 @@ public class CourseMaintenance extends JFrame {
     }
 
     // Method to remove an email from the database
-    private void removeCourseFromDatabase(String email, String courseName) {
+    public void removeCourseFromDatabase(String email, String courseName) {
         String sql = "DELETE FROM course WHERE email_course = ? AND course_course = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
