@@ -44,7 +44,7 @@ public class CourseMaintenance extends JFrame {
         gbc.gridy = 1;
         // Create and populate the JComboBox with emails from the database
         emailComboBox = new JComboBox<>();
-        //populateEmailComboBox();
+        populateEmailComboBox();
         gbc.gridx = 0;
         panel1.add(emailComboBox, gbc);
 
@@ -102,8 +102,7 @@ public class CourseMaintenance extends JFrame {
                     boolean isMixed = mixedCheckBox.isSelected();
                     String selectedEmail = (String) emailComboBox.getSelectedItem();
                     if (!courseName.isEmpty()) {
-                        //addCourseToUser(selectedEmail, courseName, isMixed);
-                        emailComboBox.addItem(courseName);
+                        addCourseToUser(selectedEmail, courseName, isMixed);
                     }
                 }
 
@@ -172,12 +171,11 @@ public class CourseMaintenance extends JFrame {
         setVisible(true);
     }
 
-    public String DB_URL = "jdbc:mariadb://192.168.43.151:3306/evaluationmap";
+    public String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
     public String DB_USER = "root";
     public String DB_PASS = "";
     // Method to populate the JComboBox with courses from the database
     public void populateEmailComboBox() {
-
         String sql = "SELECT email FROM users";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
@@ -185,21 +183,29 @@ public class CourseMaintenance extends JFrame {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             ArrayList<String> emails = new ArrayList<>();
+
+            // Loop through the result set and add the emails to the list
             while (rs.next()) {
-                String email =rs.getString("email");
+                String email = rs.getString("email");
+                emails.add(email);  // Add email to the list
             }
 
-            //Need to check why isnt getting the values from the database
-            /*
-            for (String email : emails) {
-                emailComboBox.addItem(email);
-            }
-        */
+            // Debugging: Print the emails to verify they're being fetched
+            System.out.println("Emails fetched: " + emails);
+
+            // Update the ComboBox on the EDT to ensure UI responsiveness
+            SwingUtilities.invokeLater(() -> {
+                for (String email : emails) {
+                    emailComboBox.addItem(email);  // Add email to the combo box
+                }
+            });
+
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(panel1, "Failed to fetch emails from the database.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     // Method to add a new email to the database
     public void addCourseToUser(String email, String course, boolean mixed) {
