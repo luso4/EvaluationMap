@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class CourseMaintenance extends JFrame {
     private JPanel panel1;
     private JComboBox<String> emailComboBox;
-    private JButton UserManagement; //Button to redirect to Manager new user
     private JButton Calendar; // Button to redirect to Calendar
     private JButton Exit; // Sign Off Button
     private JButton addButton; // Add Button
@@ -26,7 +25,6 @@ public class CourseMaintenance extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         panel1 = new JPanel(new GridBagLayout());
-        UserManagement = new JButton("User Management");
         Calendar = new JButton("Calendar");
         Exit = new JButton("Options");
         addButton = new JButton("Add Course");
@@ -38,7 +36,7 @@ public class CourseMaintenance extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel1.add(new JLabel("Select the email of the user "), gbc); // Example of using user data
+        panel1.add(new JLabel("Select the email of the user "), gbc);
 
 
         gbc.gridy = 1;
@@ -61,12 +59,6 @@ public class CourseMaintenance extends JFrame {
 
         setContentPane(panel1);
         setMinimumSize(new Dimension(400, 300));
-
-        // Action listener for UserManagement button
-        UserManagement.addActionListener(e -> {
-            new UserManagement(user);
-            dispose();
-        });
 
         // Action listener for Calendar button
         Calendar.addActionListener(e -> {
@@ -174,7 +166,7 @@ public class CourseMaintenance extends JFrame {
     public String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
     public String DB_USER = "root";
     public String DB_PASS = "";
-    // Method to populate the JComboBox with courses from the database
+    // Method to populate the JComboBox with emails from the database
     public void populateEmailComboBox() {
         String sql = "SELECT email FROM users";
 
