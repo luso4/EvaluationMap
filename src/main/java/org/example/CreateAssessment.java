@@ -8,12 +8,22 @@ import java.util.ArrayList;
 public class CreateAssessment extends JFrame {
     private JPanel panel1;
     private JComboBox<String> assessmentComboBox;
-    private JButton Exit; // Sign Off Button
-    private JButton Select;
+    private JSpinner PercentageTextField;
+    private JComboBox<String> roomComboBox;
+    private JRadioButton yesComputer, noComputer;
+    private ButtonGroup computerRequired;
+    private JRadioButton yesMandatory, noMandatory;
+    private ButtonGroup mandatory;
+    private JRadioButton yesRoom, noRoom;
+    private ButtonGroup roomMandatory;
+    private JButton createAssessmentButton;
+    private JButton calendarOptions;
     public User user;
+    public String course;
 
     public CreateAssessment(User user, String course) {
         this.user = user;
+        this.course = course;
 
         setTitle("Selection Course");
         setSize(720,480);
@@ -22,8 +32,8 @@ public class CreateAssessment extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         panel1 = new JPanel(new GridBagLayout());
-        Exit = new JButton("Calendar Options");
-        //Select = new JButton("Select Course");
+        createAssessmentButton = new JButton("Create Assessment");
+        calendarOptions = new JButton("Return to Calendar Options");
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -47,10 +57,149 @@ public class CreateAssessment extends JFrame {
         gbc.gridy = 2;
         panel1.add(new JLabel("Percentage: "), gbc);
 
+
+        SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 100, 1);
+        PercentageTextField = new JSpinner(model);
+        PercentageTextField.setPreferredSize(new Dimension(75, 25));
+        gbc.gridx = 1;
+        panel1.add(PercentageTextField, gbc);
+
+        //Button for the dates
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel1.add(new JLabel("Date"), gbc);
+
+        //Option for if the assessment needs a room
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        panel1.add(new JLabel("Is it required a room?"), gbc);
+
+        // Create the JRadioButtons
+        yesRoom = new JRadioButton("Yes");
+        noRoom = new JRadioButton("No");
+
+        // Create a ButtonGroup to ensure only one radio button is selected at a time
+        roomMandatory = new ButtonGroup();
+        roomMandatory.add(yesRoom);
+        roomMandatory.add(noRoom);
+
+        // Add radio buttons to the panel
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        panel1.add(yesRoom, gbc);
+
+        gbc.gridx = 2;
+        panel1.add(noRoom, gbc);
+
+        // Create and initialize the container panel for room-related components
+        JPanel roomPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints roomGbc = new GridBagConstraints();
+        roomGbc.insets = new Insets(10, 10, 10, 10);
+
+        // Room related components
+        roomPanel.setVisible(true); // Initially visible
+        roomGbc.gridx = 0;
+        roomGbc.gridy = 0;
+        roomPanel.add(new JLabel("Is it required a room with computers?"), roomGbc);
+
+
+        // Create the JRadioButtons
+        yesComputer = new JRadioButton("Yes");
+        noComputer = new JRadioButton("No");
+
+        // Create a ButtonGroup to ensure only one radio button is selected at a time
+        computerRequired = new ButtonGroup();
+        computerRequired.add(yesComputer);
+        computerRequired.add(noComputer);
+
+        // Add radio buttons to the panel
+        roomGbc.gridx = 1;
+        roomGbc.gridy = 1;
+        roomPanel.add(yesComputer, roomGbc);
+
+        roomGbc.gridx = 2;
+        roomPanel.add(noComputer, roomGbc);
+
+
+        //Selection of the Room
+        roomGbc.gridx = 0;
+        roomGbc.gridy = 2;
+        roomPanel.add(new JLabel("Room"), roomGbc);
+
+        // Create and populate the JComboBox with Assessments from the database
+        roomComboBox = new JComboBox<>();
+        populateRoomComboBox();
+        roomGbc.gridx = 1;
+        roomPanel.add(roomComboBox, roomGbc);
+
+        // Add room panel to the main panel
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 10; // Ensure it spans across the columns
+        panel1.add(roomPanel, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        panel1.add(new JLabel("Is it mandatory?"), gbc);
+
+        // Create the JRadioButtons
+        yesMandatory = new JRadioButton("Yes");
+        noMandatory = new JRadioButton("No");
+
+        // Create a ButtonGroup to ensure only one radio button is selected at a time
+        mandatory = new ButtonGroup();
+        mandatory.add(yesMandatory);
+        mandatory.add(noMandatory);
+
+        // Add radio buttons to the panel
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        panel1.add(yesMandatory, gbc);
+
+        gbc.gridx = 2;
+        panel1.add(noMandatory, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        panel1.add(createAssessmentButton, gbc);
+        gbc.gridx = 1;
+        panel1.add(calendarOptions, gbc);
+
         setContentPane(panel1);  // Set the content pane
         setMinimumSize(new Dimension(720,480));
 
         setVisible(true);
+
+        yesComputer.addActionListener(e -> {
+            populateRoomComboBox();
+        });
+
+        noComputer.addActionListener(e -> {
+            populateRoomComboBox();
+            JOptionPane.showMessageDialog(panel1, "You selected the option without computers. Please select a room without computers as there are fewer.", "Information", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        // Action listeners to handle visibility of roomPanel
+        yesRoom.addActionListener(e -> {
+            roomPanel.setVisible(true); // Show the room panel
+            panel1.revalidate(); // Revalidate the layout to update visibility
+            panel1.repaint();    // Repaint the panel to reflect the changes
+        });
+
+        noRoom.addActionListener(e -> {
+            roomPanel.setVisible(false); // Hide the room panel
+            panel1.revalidate(); // Revalidate the layout to update visibility
+            panel1.repaint();    // Repaint the panel to reflect the changes
+        });
+
+        //Action listeners for the buttons
+        createAssessmentButton.addActionListener(e ->{
+            addAssessmentCourse();
+        });
+        calendarOptions.addActionListener(e -> {
+            new CalendarOptions(user);
+            dispose();
+        });
     }
 
     public String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
@@ -61,9 +210,7 @@ public class CreateAssessment extends JFrame {
         // SQL query with a placeholder for the email
         String sql = "SELECT assessment_name FROM assessment";
 
-        //CHANGE THIS PART
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             // Using PreparedStatement even though there's no parameter now
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -88,4 +235,94 @@ public class CreateAssessment extends JFrame {
             JOptionPane.showMessageDialog(panel1, "Failed to fetch assessment from the database.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    public void populateRoomComboBox() {
+        String type_of_material = "";
+        if (yesComputer.isSelected()){
+            type_of_material = "where type_of_material = 'Computadores'";  // For rooms with computers
+        } else if (noComputer.isSelected()){
+            type_of_material = "";  // For rooms without computers
+        }
+
+        String sql = "SELECT room_room FROM room " + type_of_material;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // Clear existing items in the ComboBox before adding new ones
+                roomComboBox.removeAllItems();
+
+                // Loop through the result set and add the rooms to the ComboBox
+                while (rs.next()) {
+                    String room = rs.getString("room_room");
+                    roomComboBox.addItem(room);  // Add room to the combo box
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(panel1, "Failed to fetch room from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    public void addAssessmentCourse() {
+        // Ensure the action is not triggered multiple times
+        System.out.println("Adding Assessment Course...");
+
+        String email_user = user.getEmail();
+        String course_course = course;
+        String assessment = (String) assessmentComboBox.getSelectedItem();
+        int percentage = (Integer) PercentageTextField.getValue();
+        String date = "2025-01-12"; // Alter this variable
+        int required_room = yesRoom.isSelected() ? 1 : 0;
+        int required_room_computer = yesComputer.isSelected() ? 1 : 0;
+        String selectedRoom = (String) roomComboBox.getSelectedItem();
+        Integer course_room = Integer.parseInt(selectedRoom);  // Parse the room number
+        int assessment_mandatory = yesMandatory.isSelected() ? 1 : 0;
+
+        // Format the SQL string with actual values
+        String sqlLog = String.format("INSERT INTO assessmentcourse (assessment_course_email_user, assessment_course_course, assessment_course_assessment, assessment_course_percentage, assessment_course_date, assessment_course_required_room, assessment_course_required_room_computer, assessment_course_room, assessment_course_mandatory) " +
+                        "VALUES ('%s', '%s', '%s', %d, '%s', %d, %d, %d, %d);",
+                email_user, course_course, assessment, percentage, date, required_room, required_room_computer, course_room, assessment_mandatory);
+
+        // Show the SQL query in a dialog box (Only show this once)
+        JOptionPane.showMessageDialog(null, "SQL to be executed: \n" + sqlLog);
+
+        try {
+            // Disable the button to prevent multiple submissions
+            createAssessmentButton.setEnabled(false);
+
+            // Execute the insert SQL
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+                 PreparedStatement pstmt = conn.prepareStatement("INSERT INTO assessmentcourse (assessment_course_email_user, assessment_course_course, assessment_course_assessment, assessment_course_percentage, assessment_course_date, assessment_course_required_room, assessment_course_required_room_computer, assessment_course_room, assessment_course_mandatory) VALUES (?,?,?,?,?,?,?,?,?)")) {
+
+                pstmt.setString(1, email_user);
+                pstmt.setString(2, course_course);
+                pstmt.setString(3, assessment);
+                pstmt.setInt(4, percentage);
+                pstmt.setString(5, date);
+                pstmt.setInt(6, required_room);
+                pstmt.setInt(7, required_room_computer);
+                pstmt.setInt(8, course_room);
+                pstmt.setInt(9, assessment_mandatory);
+
+                // Execute the insert statement
+                pstmt.executeUpdate();
+
+                // Confirm success
+                JOptionPane.showMessageDialog(null, "Assessment successfully created!");
+
+            } catch (SQLException e) {
+                // Handle any exceptions
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error while inserting assessment: " + e.getMessage());
+            }
+        } finally {
+            // Re-enable the button after the action is complete
+            createAssessmentButton.setEnabled(true);
+        }
+    }
+
+
+
 }
