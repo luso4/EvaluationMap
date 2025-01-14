@@ -14,6 +14,7 @@ public class SignInPage extends JDialog {
     private JCheckBox directorCheckBox;
     private JTextField courseField;
     private JCheckBox mixedCheckBox;
+    private JTextField departmentField;
     public User user;
 
     private int yPosition = 0; // Position of y in the form
@@ -33,11 +34,15 @@ public class SignInPage extends JDialog {
         emailField = new JTextField(20);
         passwordField = new JPasswordField(20);
         usernameField = new JTextField(20);
-        directorCheckBox = new JCheckBox("Director");
         courseField = new JTextField(20);
         mixedCheckBox = new JCheckBox("Mixed");
         signInButton = new JButton("Sign Up");
         homePageButton = new JButton("User Management");
+
+        //Only for the Admin
+        directorCheckBox = new JCheckBox("Director");
+        departmentField = new JTextField(20);
+
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -67,11 +72,24 @@ public class SignInPage extends JDialog {
         gbc.gridx = 1;
         panel1.add(usernameField, gbc);
 
-        yPosition++;
+        if(user.getAdmin() == 1)
+        {
+            yPosition++;
 
-        gbc.gridx = 0;
-        gbc.gridy = yPosition;
-        panel1.add(directorCheckBox, gbc);
+            gbc.gridx = 0;
+            gbc.gridy = yPosition;
+            panel1.add(directorCheckBox, gbc);
+
+            yPosition++;
+            gbc.gridx = 0;
+            gbc.gridy = yPosition;
+            panel1.add(new JLabel("Department:"), gbc);
+
+            gbc.gridx = 1;
+            panel1.add(departmentField, gbc);
+        }
+
+
 
         yPosition++;
 
@@ -120,8 +138,9 @@ public class SignInPage extends JDialog {
         boolean isDirector = directorCheckBox.isSelected();
         String course = courseField.getText().trim();
         boolean isMixed = !mixedCheckBox.isSelected();
+        String department = departmentField.getText().trim();
 
-        if (email.isEmpty() || password.isEmpty() || username.isEmpty()) {
+        if (email.isEmpty() || password.isEmpty() || username.isEmpty() || course.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "Please fill all fields to sign up.",
                     "Error",
@@ -129,7 +148,7 @@ public class SignInPage extends JDialog {
             return;
         }
 
-        if (createUser(email, password, username, isDirector, course, isMixed)) {
+        if (createUser(email, password, username, isDirector, course, isMixed, department)) {
             JOptionPane.showMessageDialog(this,
                     "Account successfully created!",
                     "Success",
@@ -147,7 +166,7 @@ public class SignInPage extends JDialog {
         }
     }
 
-    public boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed) {
+    public boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed, String department) {
         final String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
         final String DB_USER = "userSQL";
         final String DB_PASS = "password1";
@@ -170,7 +189,14 @@ public class SignInPage extends JDialog {
                 preparedStatement.setString(2, password);
                 preparedStatement.setString(3, username);
                 preparedStatement.setInt(4, isDirector ? 1 : 0);  // Set director field as 1 if true, else 0
-                preparedStatement.setString(5, user.getDepartment() );
+                // If is a admin creating he can chooce the department if it is a director he can only assign to his department
+                if(user.getAdmin() == 1)
+                {
+                    preparedStatement.setString(5, department);
+                }
+                else {
+                    preparedStatement.setString(5, user.getDepartment());
+                }
 
                 preparedStatement.executeUpdate();
             }
