@@ -99,8 +99,8 @@ public class LoginPage extends JDialog {
         User user = null;
 
         final String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
-        final String USER = "root";
-        final String PASS = "";
+        final String USER = "userSQL";
+        final String PASS = "password1";
 
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 

@@ -149,8 +149,8 @@ public class SignInPage extends JDialog {
 
     public boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed) {
         final String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
-        final String DB_USER = "root";
-        final String DB_PASS = "";
+        final String DB_USER = "userSQL";
+        final String DB_PASS = "password1";
 
         String sql = "INSERT INTO users (email, password, name, director) VALUES (?, ?, ?, ?)";
         String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course) VALUES (?, ?, ?)";

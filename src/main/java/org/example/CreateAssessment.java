@@ -25,7 +25,7 @@ public class CreateAssessment extends JFrame {
         this.user = user;
         this.course = course;
 
-        setTitle("Selection Course");
+        setTitle("Create Assessment");
         setSize(720,480);
         setLocationRelativeTo(null);
 
@@ -203,8 +203,8 @@ public class CreateAssessment extends JFrame {
     }
 
     public String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
-    public String DB_USER = "root";
-    public String DB_PASS = "";
+    public String DB_USER = "userSQL";
+    public String DB_PASS = "password1";
     // Method to populate the JComboBox with courses from the database
     public void populateAssessmentComboBox() {
         // SQL query with a placeholder for the email
@@ -239,7 +239,7 @@ public class CreateAssessment extends JFrame {
     public void populateRoomComboBox() {
         String type_of_material = "";
         if (yesComputer.isSelected()){
-            type_of_material = "where type_of_material = 'Computadores'";  // For rooms with computers
+            type_of_material = "where room_type_of_material = 'Computadores'";  // For rooms with computers
         } else if (noComputer.isSelected()){
             type_of_material = "";  // For rooms without computers
         }
