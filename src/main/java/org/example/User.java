@@ -4,6 +4,7 @@ public class User {
     private String email;
     private String name;
     private int director;
+    private String department;
 
     // Default constructor
     public User() {
@@ -33,5 +34,9 @@ public class User {
     public void setDirector(int director) {
         this.director = director;
     }
+
+    public String getDepartment() {return department;}
+
+    public void setDepartment(String department) {this.department = department;}
 
 }

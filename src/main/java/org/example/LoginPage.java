@@ -116,6 +116,7 @@ public class LoginPage extends JDialog {
                     user.setEmail(rs.getString("email"));
                     user.setName(rs.getString("name"));
                     user.setDirector(rs.getInt("director"));
+                    user.setDepartment(rs.getString("department"));
                 }
             }
         } catch (SQLException e) {
