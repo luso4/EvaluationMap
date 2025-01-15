@@ -13,6 +13,7 @@ public class CourseMaintenance extends JFrame {
     private JButton addButton; // Add Button
     private JButton removeButton; // Remove Button
     private JLabel emailLabel; // Email Label
+    private JSpinner yearSpinner;
     public User user;
 
     public CourseMaintenance(User user) {
@@ -97,6 +98,7 @@ public class CourseMaintenance extends JFrame {
                         addCourseToUser(selectedEmail, courseName, isMixed);
                     }
                 }
+
 
         });
 
