@@ -24,7 +24,7 @@ public class SignInPage extends JDialog {
         this.user = user;
 
         setTitle("Sign Up");
-        setSize(400, 400);
+        setSize(400, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -110,7 +110,7 @@ public class SignInPage extends JDialog {
         panel1.add(mixedCheckBox, gbc);
 
 
-        // Add "Year" Spinner
+
         yPosition++;
 
         gbc.gridx = 0;
@@ -118,7 +118,6 @@ public class SignInPage extends JDialog {
         panel1.add(new JLabel("Year: "), gbc);
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 4, 1);
         yearSpinner = new JSpinner(model);
-        yearSpinner.setPreferredSize(new Dimension(75, 25));
         gbc.gridx = 1;
         panel1.add(yearSpinner, gbc);
 
