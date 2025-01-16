@@ -186,7 +186,7 @@ public class SignInPage extends JDialog {
         final String DB_PASS = "password1";
 
         String sql = "INSERT INTO users (email, password, name, director,department) VALUES (?, ?, ?, ?, ?)";
-        String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course,course_year) VALUES (?, ?, ?, ?)";
+        String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course,course_year, department_course) VALUES (?, ?, ?, ?, ?)";
 
         Connection conn = null;
 
@@ -221,6 +221,13 @@ public class SignInPage extends JDialog {
                 preparedStatementCourse.setString(2, course);
                 preparedStatementCourse.setInt(3, isMixed ? 1 : 0);
                 preparedStatementCourse.setInt(4, year);
+                if(user.getAdmin() == 1)
+                {
+                    preparedStatementCourse.setString(5, department);
+                }
+                else {
+                    preparedStatementCourse.setString(5, user.getDepartment());
+                }
 
                 preparedStatementCourse.executeUpdate();
             }
