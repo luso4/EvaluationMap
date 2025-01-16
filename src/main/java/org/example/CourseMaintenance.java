@@ -73,34 +73,57 @@ public class CourseMaintenance extends JFrame {
         });
 
         // Action listener for Add button
-         addButton.addActionListener(e -> {
+        addButton.addActionListener(e -> {
 
-                // Create a panel for the input and checkbox
-                JPanel inputPanel = new JPanel();
-                inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+            // Create a panel for the input and checkbox
+            JPanel inputPanel = new JPanel();
+            inputPanel.setLayout(new GridBagLayout());
+            GridBagConstraints gbc2 = new GridBagConstraints();
+            gbc2.anchor = GridBagConstraints.WEST; // Align labels to the left
 
-                // Add the course name label and input field to the panel
-                inputPanel.add(new JLabel("Course:"));
-                JTextField courseField = new JTextField();
-                inputPanel.add(courseField);
+            // Create the course name label and input field
+            gbc2.gridx = 0;
+            gbc2.gridy = 0;
+            inputPanel.add(new JLabel("Course:"), gbc2);
 
-                // Add the "Mixed" checkbox to the panel
-                JCheckBox mixedCheckBox = new JCheckBox("Mixed");
-                inputPanel.add(mixedCheckBox);
+            gbc2.gridx = 1;
+            JTextField courseField = new JTextField(20);
+            inputPanel.add(courseField, gbc2);
 
-                // Show a custom dialog with the input panel and the checkbox
-                int result = JOptionPane.showConfirmDialog(panel1, inputPanel, "Add New Course", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (result == JOptionPane.OK_OPTION) {
-                    String courseName = courseField.getText();
-                    boolean isMixed = mixedCheckBox.isSelected();
-                    String selectedEmail = (String) emailComboBox.getSelectedItem();
-                    if (!courseName.isEmpty()) {
-                        addCourseToUser(selectedEmail, courseName, isMixed);
-                    }
+            // Create the "Mixed" checkbox
+            gbc2.gridx = 0;
+            gbc2.gridy = 1;
+            inputPanel.add(new JLabel("Mixed:"), gbc2);
+
+            gbc2.gridx = 1;
+            JCheckBox mixedCheckBox = new JCheckBox();
+            inputPanel.add(mixedCheckBox, gbc2);
+
+            // Create the Year label and spinner
+            gbc2.gridx = 0;
+            gbc2.gridy = 2;
+            inputPanel.add(new JLabel("Year:"), gbc2);
+
+
+            gbc2.gridx = 1;
+            SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 4, 1);
+            JSpinner yearSpinner = new JSpinner(model);
+            inputPanel.add(yearSpinner, gbc2);
+
+            // Show a custom dialog with the input panel
+            int result = JOptionPane.showConfirmDialog(panel1, inputPanel, "Add New Course", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (result == JOptionPane.OK_OPTION) {
+                String courseName = courseField.getText();
+                boolean isMixed = mixedCheckBox.isSelected();
+                String selectedEmail = (String) emailComboBox.getSelectedItem();
+                int year = (Integer) yearSpinner.getValue();
+                String department = user.getDepartment();
+                if (!courseName.isEmpty()) {
+                    addCourseToUser(selectedEmail, courseName, isMixed, year, department);
                 }
-
-
+            }
         });
+
 
         // Action listener for Remove button
         removeButton.addActionListener(e -> {
@@ -170,7 +193,17 @@ public class CourseMaintenance extends JFrame {
     public String DB_PASS = "password1";
     // Method to populate the JComboBox with emails from the database
     public void populateEmailComboBox() {
-        String sql = "SELECT email FROM users";
+        String sql = "Select email from users";
+        if (user.getDirector() == 1)
+        {
+            String department = user.getDepartment();
+            sql = "Select email from users where department = '" + department + "'";
+        }
+        else
+        {
+            String email = user.getEmail();
+            sql = "SELECT email FROM users where email = '" + email + "'";
+        }
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              Statement stmt = conn.createStatement();
@@ -202,9 +235,9 @@ public class CourseMaintenance extends JFrame {
 
 
     // Method to add a new email to the database
-    public void addCourseToUser(String email, String course, boolean mixed) {
+    public void addCourseToUser(String email, String course, boolean mixed, int year, String department) {
 
-        String sql = "INSERT INTO course (email_course, course_course, Mixed_course) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO course (email_course, course_course, Mixed_course, course_year, department_course) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -212,6 +245,8 @@ public class CourseMaintenance extends JFrame {
             stmt.setString(1, email);
             stmt.setString(2, course);
             stmt.setInt(3, mixed ? 1 : 0);
+            stmt.setInt(4, year);
+            stmt.setString(5, department);
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(panel1, "Course added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
