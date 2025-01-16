@@ -16,6 +16,7 @@ public class SignInPage extends JDialog {
     private JCheckBox mixedCheckBox;
     private JTextField departmentField;
     private JSpinner yearSpinner;
+    private JSpinner studentSpinner;//RC
     public User user;
 
     private int yPosition = 0; // Position of y in the form
@@ -24,7 +25,7 @@ public class SignInPage extends JDialog {
         this.user = user;
 
         setTitle("Sign Up");
-        setSize(400, 400);
+        setSize(400, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -124,6 +125,18 @@ public class SignInPage extends JDialog {
 
         yPosition++;
 
+        //RC
+        gbc.gridx = 0;
+        gbc.gridy = yPosition;
+        panel1.add(new JLabel("Students: "), gbc);
+        SpinnerNumberModel modelo = new SpinnerNumberModel(1, 1, 400, 1);
+        studentSpinner = new JSpinner(modelo);
+        gbc.gridx = 1;
+        panel1.add(studentSpinner, gbc);
+
+        yPosition++;
+
+
         gbc.gridx = 0;
         gbc.gridy = yPosition;
         panel1.add(signInButton, gbc);
@@ -154,6 +167,7 @@ public class SignInPage extends JDialog {
         boolean isMixed = !mixedCheckBox.isSelected();
         String department = departmentField.getText().trim();
         int year = (Integer) yearSpinner.getValue();
+        int numberSt = (Integer) studentSpinner.getValue();//RC
 
         if (email.isEmpty() || password.isEmpty() || username.isEmpty() || course.isEmpty()) {
             JOptionPane.showMessageDialog(this,
@@ -163,7 +177,7 @@ public class SignInPage extends JDialog {
             return;
         }
 
-        if (createUser(email, password, username, isDirector, course, isMixed, department, year)) {
+        if (createUser(email, password, username, isDirector, course, isMixed, department, year, numberSt)) {
             JOptionPane.showMessageDialog(this,
                     "Account successfully created!",
                     "Success",
@@ -181,13 +195,13 @@ public class SignInPage extends JDialog {
         }
     }
 
-    public boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed, String department, int year) {
-        final String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
+    public boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed, String department, int year, int numberSt) {
+        final String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
         final String DB_USER = "userSQL";
         final String DB_PASS = "password1";
 
         String sql = "INSERT INTO users (email, password, name, director,department) VALUES (?, ?, ?, ?, ?)";
-        String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course,course_year) VALUES (?, ?, ?, ?)";
+        String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course,course_year,department_course, number_student_course) VALUES (?, ?, ?, ?, ?, ?)"; //RC
 
         Connection conn = null;
 
@@ -222,6 +236,14 @@ public class SignInPage extends JDialog {
                 preparedStatementCourse.setString(2, course);
                 preparedStatementCourse.setInt(3, isMixed ? 1 : 0);
                 preparedStatementCourse.setInt(4, year);
+                if(user.getAdmin() == 1)
+                {
+                    preparedStatementCourse.setString(5, department);
+                }
+                else {
+                    preparedStatementCourse.setString(5, user.getDepartment());
+                }
+                preparedStatementCourse.setInt(6, numberSt); //RC
 
                 preparedStatementCourse.executeUpdate();
             }
