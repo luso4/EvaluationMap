@@ -20,6 +20,8 @@ dependencies {
     testImplementation 'org.assertj:assertj-swing:3.17.1'  // Use a newer version
     testImplementation 'org.mariadb.jdbc:mariadb-java-client:3.0.7'
     testImplementation 'org.assertj:assertj-core:3.24.2'
+    implementation 'com.toedter:jcalendar:1.4'
+
 }
 
 // Java Toolchain configuration to ensure Gradle uses Java 17

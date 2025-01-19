@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import com.toedter.calendar.JDateChooser;
 
 public class CreateAssessment extends JFrame {
     private JPanel panel1;
@@ -18,6 +19,7 @@ public class CreateAssessment extends JFrame {
     private ButtonGroup roomMandatory;
     private JButton createAssessmentButton;
     private JButton calendarOptions;
+    private JDateChooser dateChooser;
     public User user;
     public String course;
 
@@ -65,10 +67,17 @@ public class CreateAssessment extends JFrame {
         gbc.gridx = 1;
         panel1.add(PercentageTextField, gbc);
 
-        //Button for the dates
+        // Button for the dates
         gbc.gridx = 0;
         gbc.gridy = 3;
         panel1.add(new JLabel("Date"), gbc);
+
+        // Create a JDateChooser component for selecting the date
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setDateFormatString("yyyy-MM-dd");  // Set the date format
+        gbc.gridx = 1;
+        panel1.add(dateChooser, gbc);
+
 
         //Option for if the assessment needs a room
         gbc.gridx = 0;
@@ -274,7 +283,10 @@ public class CreateAssessment extends JFrame {
         String course_course = course;
         String assessment = (String) assessmentComboBox.getSelectedItem();
         int percentage = (Integer) PercentageTextField.getValue();
-        String date = "2025-01-12"; // Alter this variable
+        // Captura a data selecionada
+        java.util.Date selectedDate = dateChooser.getDate();
+        java.sql.Date sqlDate = new java.sql.Date(selectedDate.getTime());
+        String date = sqlDate.toString();  // Converte para o formato de data SQL
         int required_room = yesRoom.isSelected() ? 1 : 0;
         int required_room_computer = yesComputer.isSelected() ? 1 : 0;
         String selectedRoom = (String) roomComboBox.getSelectedItem();

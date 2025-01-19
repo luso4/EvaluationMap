@@ -43,7 +43,7 @@ public class AssessmentManagement extends JFrame {
         }
         //when there is some assessments
         else {
-                if
+
 
             // Add the header label
             gbc.gridx = 0;

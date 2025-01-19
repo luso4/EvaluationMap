@@ -52,10 +52,11 @@ public class SelectionCourse extends JFrame {
         Select.addActionListener(e -> {
             // Get the selected Course object from the JComboBox
             Course selectedCourse = (Course) courseComboBox.getSelectedItem();
+            String a = courseComboBox.getSelectedItem().toString();
 
             if (selectedCourse != null) {
                 // Pass the user object and the selected Course to the CreateAssessment constructor
-                new AssessmentManagement(user, selectedCourse);  // Assuming CreateAssessment has a constructor that accepts User and Course
+                new CreateAssessment(user, a);  // Assuming CreateAssessment has a constructor that accepts User and Course
                 dispose();  // Close the current window
             } else {
                 JOptionPane.showMessageDialog(panel1, "Please select a course first.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -92,6 +93,7 @@ public class SelectionCourse extends JFrame {
 
                 // Loop through the result set and create Course objects
                 while (rs.next()) {
+                    String curso = rs.getString("course_course");
                     String courseCourse = rs.getString("course_course");
                     int courseAssessmentNr = rs.getInt("course_number_assessment");
                     int studentNrCourse = rs.getInt("number_student_course");
