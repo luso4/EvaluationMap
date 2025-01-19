@@ -5,13 +5,15 @@ public class Course {
     private int courseAssessmentNr;
     private int studentNrCourse;
     private int mixedcourse;
+    private int assessmentMandatoryNumberCourse ;
 
     // Constructor
-    public Course(String courseCourse, int courseAssessmentNr, int studentNrCourse, int mixedcourse) {
+    public Course(String courseCourse, int courseAssessmentNr, int studentNrCourse, int mixedcourse, int assessmentMandatoryNumberCourse) {
         this.courseCourse = courseCourse;
         this.courseAssessmentNr = courseAssessmentNr;
         this.studentNrCourse = studentNrCourse;
         this.mixedcourse = mixedcourse;
+        this.assessmentMandatoryNumberCourse = assessmentMandatoryNumberCourse;
     }
 
     public String getcourseCourse() {
@@ -42,6 +44,11 @@ public class Course {
     }
 
     public void setmixedcourse(int mixedcourse) {}
+
+    public int getassessmentMandatoryNumberCourse() {
+        return assessmentMandatoryNumberCourse;
+    }
+    public void setassessmentMandatoryNumberCourse(int assessmentMandatoryNumberCourse) {}
 
     @Override
     public String toString() {

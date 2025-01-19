@@ -44,6 +44,13 @@ public class AssessmentManagement extends JFrame {
         //when there is some assessments
         else {
 
+                //If it is a continuous course
+            if (course.getcourseAssessmentNr() == 0) {
+                if (course.getassessmentMandatoryNumberCourse() < 3) {
+                    panel1.add(new JLabel("You have " + course.getassessmentMandatoryNumberCourse() + " mandatory assessments. Please insert " + (3 - course.getassessmentMandatoryNumberCourse()) + "."), gbc);
+                }
+            }
+
 
             // Add the header label
             gbc.gridx = 0;
@@ -106,6 +113,9 @@ public class AssessmentManagement extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Handle create assessment action
                 JOptionPane.showMessageDialog(panel1, "Creating a new assessment...");
+                //String selectedCourse = course.getcourseCourse();
+                new CreateAssessment(user, course);  // Assuming CreateAssessment has a constructor that accepts User and Course
+                dispose();  // Close the current window
             }
         });
 
