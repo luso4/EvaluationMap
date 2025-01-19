@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
+
 import com.toedter.calendar.JDateChooser;
 
 public class CreateAssessment extends JFrame {
@@ -319,9 +321,11 @@ public class CreateAssessment extends JFrame {
         String assessment = (String) assessmentComboBox.getSelectedItem();
         int percentage = (Integer) PercentageTextField.getValue();
         // Captura a data selecionada
-        java.util.Date selectedDate = dateChooser.getDate();
+        /*java.util.Date selectedDate = dateChooser.getDate();
         java.sql.Date sqlDate = new java.sql.Date(selectedDate.getTime());
-        String date = sqlDate.toString();  // Converte para o formato de data SQL
+        String date = sqlDate.toString();  // Converte para o formato de data SQL*/
+
+        String date = "2025-01-01";
         int required_room = yesRoom.isSelected() ? 1 : 0;
         int required_room_computer = yesComputer.isSelected() ? 1 : 0;
         String selectedRoom = (String) roomComboBox.getSelectedItem();
@@ -366,11 +370,15 @@ public class CreateAssessment extends JFrame {
                 }
 
                 // Second SQL insert - Example into another table, e.g., 'assessment_details'
-                String sqlInsert2 = "UPDATE course (course_number_assessment, assessment_mandatory_number_course) " +
-                        "VALUES (?, ?)";
+                String sqlInsert2 = "UPDATE course " +
+                        "SET course_number_assessment = ?, assessment_mandatory_number_course = ?, percentage_course = ? " +
+                        "WHERE course_course = ?";
                 try (PreparedStatement pstmt2 = conn.prepareStatement(sqlInsert2)) {
                     pstmt2.setInt(1, course.getcourseAssessmentNr() + 1 );
                     pstmt2.setInt(2, course.getassessmentMandatoryNumberCourse() + 1);
+                    pstmt2.setInt(3,course.getpercentageCourse() + percentage);
+                    pstmt2.setString(4,course.getcourseCourse());
+
 
                     // Execute the second insert statement
                     pstmt2.executeUpdate();
