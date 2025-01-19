@@ -10,8 +10,8 @@ public class CreateAssessment extends JFrame {
     private JComboBox<String> assessmentComboBox;
     private JSpinner PercentageTextField;
     private JComboBox<String> roomComboBox;
-    private JRadioButton yesComputer, noComputer;
-    private ButtonGroup computerRequired;
+    private JRadioButton yesComputer, noComputer, yesMore, noMore;
+    private ButtonGroup computerRequired, moreRequired;
     private JRadioButton yesMandatory, noMandatory;
     private ButtonGroup mandatory;
     private JRadioButton yesRoom, noRoom;
@@ -119,6 +119,38 @@ public class CreateAssessment extends JFrame {
 
         roomGbc.gridx = 2;
         roomPanel.add(noComputer, roomGbc);
+
+
+        //RC
+
+        // Create and initialize the container panel for room-related components
+        JPanel roomPanelCon = new JPanel(new GridBagLayout());
+        GridBagConstraints roomConGbc = new GridBagConstraints();
+        roomConGbc.insets = new Insets(10, 10, 10, 10);
+
+        // Room related components
+        roomPanelCon.setVisible(true); // Initially visible
+        roomConGbc.gridx = 0;
+        roomConGbc.gridy = 0;
+        roomPanelCon.add(new JLabel("Is it required more than one room?"), roomConGbc);
+
+
+        // Create the JRadioButtons
+        yesMore = new JRadioButton("Yes");
+        noMore = new JRadioButton("No");
+
+        // Create a ButtonGroup to ensure only one radio button is selected at a time
+        moreRequired = new ButtonGroup();
+        moreRequired.add(yesMore);
+        moreRequired.add(noMore);
+
+        // Add radio buttons to the panel
+        roomConGbc.gridx = 1;
+        roomConGbc.gridy = 1;
+        roomPanelCon.add(yesMore, roomConGbc);
+
+        roomConGbc.gridx = 2;
+        roomPanelCon.add(noMore, roomConGbc);
 
 
         //Selection of the Room
@@ -238,8 +270,14 @@ public class CreateAssessment extends JFrame {
 
     public void populateRoomComboBox() {
         String type_of_material = "";
+        String more_of_room = "";
         if (yesComputer.isSelected()){
+                if(yesMore.isSelected()){
+                    more_of_room = "where room_sits " ;
+
+            }
             type_of_material = "where room_type_of_material = 'Computadores'";  // For rooms with computers
+
         } else if (noComputer.isSelected()){
             type_of_material = "";  // For rooms without computers
         }

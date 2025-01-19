@@ -14,6 +14,7 @@ public class CourseMaintenance extends JFrame {
     private JButton removeButton; // Remove Button
     private JLabel emailLabel; // Email Label
     private JSpinner yearSpinner;
+    private JSpinner studentSpinner;//RC
     public User user;
 
     public CourseMaintenance(User user) {
@@ -88,14 +89,24 @@ public class CourseMaintenance extends JFrame {
                 JCheckBox mixedCheckBox = new JCheckBox("Mixed");
                 inputPanel.add(mixedCheckBox);
 
-                // Show a custom dialog with the input panel and the checkbox
+                // Add the numberOfStudents label and input field on the panel
+                //RC
+
+                inputPanel.add(new JLabel("Students: "));
+                SpinnerNumberModel modelo = new SpinnerNumberModel(1, 1, 400, 1);
+                studentSpinner = new JSpinner(modelo);
+                inputPanel.add(studentSpinner);
+
+
+             // Show a custom dialog with the input panel and the checkbox
                 int result = JOptionPane.showConfirmDialog(panel1, inputPanel, "Add New Course", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     String courseName = courseField.getText();
                     boolean isMixed = mixedCheckBox.isSelected();
                     String selectedEmail = (String) emailComboBox.getSelectedItem();
+                    int studentNumber =  (Integer) studentSpinner.getValue();
                     if (!courseName.isEmpty()) {
-                        addCourseToUser(selectedEmail, courseName, isMixed);
+                        addCourseToUser(selectedEmail, courseName, isMixed, studentNumber);
                     }
                 }
 
@@ -202,9 +213,9 @@ public class CourseMaintenance extends JFrame {
 
 
     // Method to add a new email to the database
-    public void addCourseToUser(String email, String course, boolean mixed) {
+    public void addCourseToUser(String email, String course, boolean mixed, int number ) {
 
-        String sql = "INSERT INTO course (email_course, course_course, Mixed_course) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO course (email_course, course_course, Mixed_course, number_student_course) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -212,6 +223,7 @@ public class CourseMaintenance extends JFrame {
             stmt.setString(1, email);
             stmt.setString(2, course);
             stmt.setInt(3, mixed ? 1 : 0);
+            stmt.setInt(4, number);
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(panel1, "Course added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
