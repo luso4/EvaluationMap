@@ -237,7 +237,7 @@ public class CourseMaintenance extends JFrame {
     // Method to add a new email to the database
     public void addCourseToUser(String email, String course, boolean mixed, int year, String department) {
 
-        String sql = "INSERT INTO course (email_course, course_course, Mixed_course, course_year, department_course) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO course (email_course, course_course, Mixed_course, course_year, department_course, course_number_assessment) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -247,6 +247,7 @@ public class CourseMaintenance extends JFrame {
             stmt.setInt(3, mixed ? 1 : 0);
             stmt.setInt(4, year);
             stmt.setString(5, department);
+            stmt.setInt(6, 0);
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(panel1, "Course added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);

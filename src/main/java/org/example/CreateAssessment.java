@@ -31,6 +31,7 @@ public class CreateAssessment extends JFrame {
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
+
         panel1 = new JPanel(new GridBagLayout());
         createAssessmentButton = new JButton("Create Assessment");
         calendarOptions = new JButton("Return to Calendar Options");

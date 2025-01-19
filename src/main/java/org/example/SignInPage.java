@@ -196,7 +196,7 @@ public class SignInPage extends JDialog {
 
 
     public boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed, String department, int year, int numberSt) {
-=======
+
   
         final String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
         final String DB_USER = "userSQL";
@@ -204,8 +204,7 @@ public class SignInPage extends JDialog {
 
         String sql = "INSERT INTO users (email, password, name, director,department) VALUES (?, ?, ?, ?, ?)";
 
-        String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course,course_year,department_course, number_student_course) VALUES (?, ?, ?, ?, ?, ?)"; //RC
-=======
+        String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course,course_year,department_course, number_student_course, course_number_assessment ) VALUES (?, ?, ?, ?, ?, ?, ?)"; //RC & //JSL
 
 
         Connection conn = null;
@@ -250,6 +249,9 @@ public class SignInPage extends JDialog {
                 }
 
                 preparedStatementCourse.setInt(6, numberSt); //RC
+
+                //JSL
+                preparedStatementCourse.setInt(7, 0);
 
                 preparedStatementCourse.executeUpdate();
             }
