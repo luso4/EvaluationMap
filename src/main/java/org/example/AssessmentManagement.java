@@ -43,12 +43,14 @@ public class AssessmentManagement extends JFrame {
         }
         //when there is some assessments
         else {
+
                 //If it is a continuous course
             if (course.getcourseAssessmentNr() == 0) {
                 if (course.getassessmentMandatoryNumberCourse() < 3) {
                     panel1.add(new JLabel("You have " + course.getassessmentMandatoryNumberCourse() + " mandatory assessments. Please insert " + (3 - course.getassessmentMandatoryNumberCourse()) + "."), gbc);
                 }
             }
+
 
             // Add the header label
             gbc.gridx = 0;
