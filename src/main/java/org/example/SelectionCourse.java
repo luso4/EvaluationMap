@@ -52,11 +52,10 @@ public class SelectionCourse extends JFrame {
         Select.addActionListener(e -> {
             // Get the selected Course object from the JComboBox
             Course selectedCourse = (Course) courseComboBox.getSelectedItem();
-            String a = courseComboBox.getSelectedItem().toString();
 
             if (selectedCourse != null) {
                 // Pass the user object and the selected Course to the CreateAssessment constructor
-                new CreateAssessment(user, a);  // Assuming CreateAssessment has a constructor that accepts User and Course
+                new AssessmentManagement(user, selectedCourse);  // Assuming CreateAssessment has a constructor that accepts User and Course
                 dispose();  // Close the current window
             } else {
                 JOptionPane.showMessageDialog(panel1, "Please select a course first.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -79,7 +78,7 @@ public class SelectionCourse extends JFrame {
     // Method to populate the JComboBox with courses from the database
     public void populateCourseComboBox() {
         // SQL query with a placeholder for the email
-        String sql = "SELECT course_course, course_number_assessment, number_student_course, mixed_course, assessment_mandatory_number_course  FROM course WHERE email_course = ?";
+        String sql = "SELECT course_course, course_number_assessment, number_student_course, mixed_course, assessment_mandatory_number_course, percentage_course  FROM course WHERE email_course = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              // Use PreparedStatement to safely insert the email
@@ -99,9 +98,10 @@ public class SelectionCourse extends JFrame {
                     int studentNrCourse = rs.getInt("number_student_course");
                     int mixedCourse =rs.getInt("mixed_course");
                     int assessmentMandatoryNumberCourse =rs.getInt("assessment_mandatory_number_course");
+                    int percentageCourse = rs.getInt("percentage_course");
 
                     // Create a new Course object and add it to the list
-                    Course course = new Course(courseCourse, courseAssessmentNr, studentNrCourse, mixedCourse, assessmentMandatoryNumberCourse);
+                    Course course = new Course(courseCourse, courseAssessmentNr, studentNrCourse, mixedCourse, assessmentMandatoryNumberCourse, percentageCourse);
                     courses.add(course);
                 }
 
