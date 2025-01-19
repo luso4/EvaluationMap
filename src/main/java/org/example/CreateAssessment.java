@@ -18,10 +18,11 @@ public class CreateAssessment extends JFrame {
     private ButtonGroup roomMandatory;
     private JButton createAssessmentButton;
     private JButton calendarOptions;
+    private JDateChooser dateChooser;
     public User user;
-    public String course;
+    public Course course;
 
-    public CreateAssessment(User user, String course) {
+    public CreateAssessment(User user, Course course) {
         this.user = user;
         this.course = course;
 
@@ -30,6 +31,7 @@ public class CreateAssessment extends JFrame {
         setLocationRelativeTo(null);
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
 
         panel1 = new JPanel(new GridBagLayout());
         createAssessmentButton = new JButton("Create Assessment");
@@ -64,10 +66,17 @@ public class CreateAssessment extends JFrame {
         gbc.gridx = 1;
         panel1.add(PercentageTextField, gbc);
 
-        //Button for the dates
+        // Button for the dates
         gbc.gridx = 0;
         gbc.gridy = 3;
         panel1.add(new JLabel("Date"), gbc);
+
+        // Create a JDateChooser component for selecting the date
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setDateFormatString("yyyy-MM-dd");  // Set the date format
+        gbc.gridx = 1;
+        panel1.add(dateChooser, gbc);
+
 
         //Option for if the assessment needs a room
         gbc.gridx = 0;
@@ -304,14 +313,14 @@ public class CreateAssessment extends JFrame {
         }
     }
     public void addAssessmentCourse() {
-        // Ensure the action is not triggered multiple times
-        System.out.println("Adding Assessment Course...");
-
         String email_user = user.getEmail();
-        String course_course = course;
+        String course_course = course.getcourseCourse();
         String assessment = (String) assessmentComboBox.getSelectedItem();
         int percentage = (Integer) PercentageTextField.getValue();
-        String date = "2025-01-12"; // Alter this variable
+        // Captura a data selecionada
+        java.util.Date selectedDate = dateChooser.getDate();
+        java.sql.Date sqlDate = new java.sql.Date(selectedDate.getTime());
+        String date = sqlDate.toString();  // Converte para o formato de data SQL
         int required_room = yesRoom.isSelected() ? 1 : 0;
         int required_room_computer = yesComputer.isSelected() ? 1 : 0;
         String selectedRoom = (String) roomComboBox.getSelectedItem();
@@ -319,8 +328,10 @@ public class CreateAssessment extends JFrame {
         int assessment_mandatory = yesMandatory.isSelected() ? 1 : 0;
 
         // Format the SQL string with actual values
-        String sqlLog = String.format("INSERT INTO assessmentcourse (assessment_course_email_user, assessment_course_course, assessment_course_assessment, assessment_course_percentage, assessment_course_date, assessment_course_required_room, assessment_course_required_room_computer, assessment_course_room, assessment_course_mandatory) " +
-                        "VALUES ('%s', '%s', '%s', %d, '%s', %d, %d, %d, %d);",
+        String sqlLog = String.format("INSERT INTO assessmentcourse (assessment_course_email_user, assessment_course_course, " +
+                        "assessment_course_assessment, assessment_course_percentage, assessment_course_date, " +
+                        "assessment_course_required_room, assessment_course_required_room_computer, assessment_course_room, " +
+                        "assessment_course_mandatory) VALUES ('%s', '%s', '%s', %d, '%s', %d, %d, %d, %d);",
                 email_user, course_course, assessment, percentage, date, required_room, required_room_computer, course_room, assessment_mandatory);
 
         // Show the SQL query in a dialog box (Only show this once)
@@ -330,37 +341,57 @@ public class CreateAssessment extends JFrame {
             // Disable the button to prevent multiple submissions
             createAssessmentButton.setEnabled(false);
 
-            // Execute the insert SQL
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                 PreparedStatement pstmt = conn.prepareStatement("INSERT INTO assessmentcourse (assessment_course_email_user, assessment_course_course, assessment_course_assessment, assessment_course_percentage, assessment_course_date, assessment_course_required_room, assessment_course_required_room_computer, assessment_course_room, assessment_course_mandatory) VALUES (?,?,?,?,?,?,?,?,?)")) {
+            // Execute the first insert SQL
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+                try (PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO assessmentcourse " +
+                        "(assessment_course_email_user, assessment_course_course, " +
+                        "assessment_course_assessment, assessment_course_percentage, " +
+                        "assessment_course_date, assessment_course_required_room, " +
+                        "assessment_course_required_room_computer, assessment_course_room, " +
+                        "assessment_course_mandatory) VALUES (?,?,?,?,?,?,?,?,?)")) {
 
-                pstmt.setString(1, email_user);
-                pstmt.setString(2, course_course);
-                pstmt.setString(3, assessment);
-                pstmt.setInt(4, percentage);
-                pstmt.setString(5, date);
-                pstmt.setInt(6, required_room);
-                pstmt.setInt(7, required_room_computer);
-                pstmt.setInt(8, course_room);
-                pstmt.setInt(9, assessment_mandatory);
+                    pstmt1.setString(1, email_user);
+                    pstmt1.setString(2, course_course);
+                    pstmt1.setString(3, assessment);
+                    pstmt1.setInt(4, percentage);
+                    pstmt1.setString(5, date);
+                    pstmt1.setInt(6, required_room);
+                    pstmt1.setInt(7, required_room_computer);
+                    pstmt1.setInt(8, course_room);
+                    pstmt1.setInt(9, assessment_mandatory);
 
-                // Execute the insert statement
-                pstmt.executeUpdate();
+                    // Execute the first insert statement
+                    pstmt1.executeUpdate();
+                }
+
+                // Second SQL insert - Example into another table, e.g., 'assessment_details'
+                String sqlInsert2 = "UPDATE course (course_number_assessment, assessment_mandatory_number_course) " +
+                        "VALUES (?, ?)";
+                try (PreparedStatement pstmt2 = conn.prepareStatement(sqlInsert2)) {
+                    pstmt2.setInt(1, course.getcourseAssessmentNr() + 1 );
+                    pstmt2.setInt(2, course.getassessmentMandatoryNumberCourse() + 1);
+
+                    // Execute the second insert statement
+                    pstmt2.executeUpdate();
+                }
 
                 // Confirm success
-                JOptionPane.showMessageDialog(null, "Assessment successfully created!");
+                JOptionPane.showMessageDialog(null, "Assessment successfully created and additional record added!");
 
             } catch (SQLException e) {
                 // Handle any exceptions
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error while inserting assessment: " + e.getMessage());
             }
+
         } finally {
-            // Re-enable the button after the action is complete
+            // Enable the button after the operation is complete
             createAssessmentButton.setEnabled(true);
         }
     }
 
-
-
 }
+
+
+
+

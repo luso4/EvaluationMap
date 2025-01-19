@@ -111,7 +111,7 @@ public class SignInPage extends JDialog {
         panel1.add(mixedCheckBox, gbc);
 
 
-        // Add "Year" Spinner
+
         yPosition++;
 
         gbc.gridx = 0;
@@ -119,7 +119,6 @@ public class SignInPage extends JDialog {
         panel1.add(new JLabel("Year: "), gbc);
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 4, 1);
         yearSpinner = new JSpinner(model);
-        yearSpinner.setPreferredSize(new Dimension(75, 25));
         gbc.gridx = 1;
         panel1.add(yearSpinner, gbc);
 
@@ -195,13 +194,18 @@ public class SignInPage extends JDialog {
         }
     }
 
+
     public boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed, String department, int year, int numberSt) {
+
+  
         final String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
         final String DB_USER = "userSQL";
         final String DB_PASS = "password1";
 
         String sql = "INSERT INTO users (email, password, name, director,department) VALUES (?, ?, ?, ?, ?)";
-        String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course,course_year,department_course, number_student_course) VALUES (?, ?, ?, ?, ?, ?)"; //RC
+
+        String sqlCourse = "INSERT INTO course (email_course, course_course, Mixed_course,course_year,department_course, number_student_course, course_number_assessment ) VALUES (?, ?, ?, ?, ?, ?, ?)"; //RC & //JSL
+
 
         Connection conn = null;
 
@@ -243,7 +247,11 @@ public class SignInPage extends JDialog {
                 else {
                     preparedStatementCourse.setString(5, user.getDepartment());
                 }
+
                 preparedStatementCourse.setInt(6, numberSt); //RC
+
+                //JSL
+                preparedStatementCourse.setInt(7, 0);
 
                 preparedStatementCourse.executeUpdate();
             }
