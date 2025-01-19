@@ -14,6 +14,7 @@ public class CourseMaintenance extends JFrame {
     private JButton removeButton; // Remove Button
     private JLabel emailLabel; // Email Label
     private JSpinner yearSpinner;
+    private JSpinner numberSpinner;
     public User user;
 
     public CourseMaintenance(User user) {
@@ -110,6 +111,16 @@ public class CourseMaintenance extends JFrame {
             JSpinner yearSpinner = new JSpinner(model);
             inputPanel.add(yearSpinner, gbc2);
 
+            gbc2.gridx = 0;
+            gbc2.gridy = 3;
+            inputPanel.add(new JLabel("NumberOfStudents:"), gbc2);
+            gbc2.gridx = 1;
+            SpinnerNumberModel Stmodel = new SpinnerNumberModel(1, 1, 400, 1);
+            JSpinner numberSpinner = new JSpinner(Stmodel);
+            inputPanel.add(numberSpinner, gbc2);
+
+
+
             // Show a custom dialog with the input panel
             int result = JOptionPane.showConfirmDialog(panel1, inputPanel, "Add New Course", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
@@ -118,8 +129,9 @@ public class CourseMaintenance extends JFrame {
                 String selectedEmail = (String) emailComboBox.getSelectedItem();
                 int year = (Integer) yearSpinner.getValue();
                 String department = user.getDepartment();
+                int numberStudent = (Integer) numberSpinner.getValue();
                 if (!courseName.isEmpty()) {
-                    addCourseToUser(selectedEmail, courseName, isMixed, year, department);
+                    addCourseToUser(selectedEmail, courseName, isMixed, year, department, numberStudent);
                 }
             }
         });
@@ -235,9 +247,9 @@ public class CourseMaintenance extends JFrame {
 
 
     // Method to add a new email to the database
-    public void addCourseToUser(String email, String course, boolean mixed, int year, String department) {
+    public void addCourseToUser(String email, String course, boolean mixed, int year, String department, int number) {
 
-        String sql = "INSERT INTO course (email_course, course_course, Mixed_course, course_year, department_course, course_number_assessment) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO course (email_course, course_course, Mixed_course, course_year, department_course, course_number_assessment, number_student_course) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -248,6 +260,7 @@ public class CourseMaintenance extends JFrame {
             stmt.setInt(4, year);
             stmt.setString(5, department);
             stmt.setInt(6, 0);
+            stmt.setInt(7, number);
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(panel1, "Course added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
