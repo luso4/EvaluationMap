@@ -78,7 +78,7 @@ public class SelectionCourse extends JFrame {
     // Method to populate the JComboBox with courses from the database
     public void populateCourseComboBox() {
         // SQL query with a placeholder for the email
-        String sql = "SELECT course_course, course_number_assessment, number_student_course, mixed_course FROM course WHERE email_course = ?";
+        String sql = "SELECT course_course, course_number_assessment, number_student_course, mixed_course, assessment_mandatory_number_course  FROM course WHERE email_course = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              // Use PreparedStatement to safely insert the email
@@ -96,9 +96,10 @@ public class SelectionCourse extends JFrame {
                     int courseAssessmentNr = rs.getInt("course_number_assessment");
                     int studentNrCourse = rs.getInt("number_student_course");
                     int mixedCourse =rs.getInt("mixed_course");
+                    int assessmentMandatoryNumberCourse =rs.getInt("assessment_mandatory_number_course");
 
                     // Create a new Course object and add it to the list
-                    Course course = new Course(courseCourse, courseAssessmentNr, studentNrCourse, mixedCourse);
+                    Course course = new Course(courseCourse, courseAssessmentNr, studentNrCourse, mixedCourse, assessmentMandatoryNumberCourse);
                     courses.add(course);
                 }
 
