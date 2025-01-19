@@ -28,7 +28,7 @@ public class CreateAssessment extends JFrame {
         this.course = course;
 
         setTitle("Create Assessment");
-        setSize(720,480);
+        setSize(1280,720);
         setLocationRelativeTo(null);
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -71,10 +71,10 @@ public class CreateAssessment extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 3;
         panel1.add(new JLabel("Date"), gbc);
-
         // Create a JDateChooser component for selecting the date
-        JDateChooser dateChooser = new JDateChooser();
+        dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("yyyy-MM-dd");  // Set the date format
+
         gbc.gridx = 1;
         panel1.add(dateChooser, gbc);
 
