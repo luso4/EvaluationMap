@@ -56,7 +56,7 @@ public class SelectionCourse extends JFrame {
 
             if (selectedCourse != null) {
                 // Pass the user object and the selected Course to the CreateAssessment constructor
-                new CreateAssessment(user, a);  // Assuming CreateAssessment has a constructor that accepts User and Course
+                new CreateAssessment(user, selectedCourse);  // Assuming CreateAssessment has a constructor that accepts User and Course
                 dispose();  // Close the current window
             } else {
                 JOptionPane.showMessageDialog(panel1, "Please select a course first.", "Error", JOptionPane.ERROR_MESSAGE);
