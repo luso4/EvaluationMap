@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) {
         // Database credentials
-         String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
+         String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
          String DB_USER = "userSQL";
          String DB_PASS = "password1";
 
