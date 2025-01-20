@@ -246,33 +246,29 @@ public class CreateAssessment extends JFrame {
     public void populateRoomComboBox() {
         String type_of_material = "";
         String sql = "";
-        if (yesComputer.isSelected()){
 
-            type_of_material = " AND  room_type_of_material = 'Computadores'";  // For rooms with computers
-
-        } else if (noComputer.isSelected()){
+        if (yesComputer.isSelected()) {
+            type_of_material = " AND room_type_of_material = 'Computadores'";  // For rooms with computers
+        } else if (noComputer.isSelected()) {
             type_of_material = "";
         }
 
         sql = "SELECT room_room FROM room WHERE room_seats >= " + course.getstudentNrCourse() + type_of_material;
 
-
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    roomComboBox.removeAllItems();
-                    while (rs.next()) {
-                        roomComboBox.addItem(rs.getString("room_room"));
-                    }
+            try (ResultSet rs = pstmt.executeQuery()) {
+                roomComboBox.removeAllItems();
+                while (rs.next()) {
+                    roomComboBox.addItem(rs.getString("room_room"));
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(panel1, "Failed to fetch room from the database.", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(panel1, "Failed to fetch room from the database.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
 
     private void addAssessmentCourse() {
         String email_user = user.getEmail();
