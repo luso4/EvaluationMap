@@ -95,9 +95,7 @@ public class CreateAssessment extends JFrame {
 
         // Add radio buttons to the panel
         gbc.gridx = 1;
-        gbc.gridy = 4;
         panel1.add(yesRoom, gbc);
-
         gbc.gridx = 2;
         panel1.add(noRoom, gbc);
 
@@ -109,7 +107,7 @@ public class CreateAssessment extends JFrame {
         // Room related components
         roomPanel.setVisible(true); // Initially visible
         roomGbc.gridx = 0;
-        roomGbc.gridy = 5;
+        roomGbc.gridy = 0;
         roomPanel.add(new JLabel("Is it required a room with computers?"), roomGbc);
 
 
@@ -124,7 +122,7 @@ public class CreateAssessment extends JFrame {
 
         // Add radio buttons to the panel
         roomGbc.gridx = 1;
-        roomGbc.gridy = 5;
+        roomGbc.gridy = 1;
         roomPanel.add(yesComputer, roomGbc);
 
         roomGbc.gridx = 2;
@@ -135,7 +133,7 @@ public class CreateAssessment extends JFrame {
 
         //Selection of the Room
         roomGbc.gridx = 0;
-        roomGbc.gridy = 6;
+        roomGbc.gridy = 2;
         roomPanel.add(new JLabel("Room"), roomGbc);
 
         // Create and populate the JComboBox with Assessments from the database
@@ -149,49 +147,13 @@ public class CreateAssessment extends JFrame {
 
         // Add room panel to the main panel
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 5;
         gbc.gridwidth = 10; // Ensure it spans across the columns
         panel1.add(roomPanel, gbc);
 
 
-
-
-        //RC
-
-        // Create and initialize the container panel for room-related components
-        JPanel roomPanelCon = new JPanel(new GridBagLayout());
-        GridBagConstraints roomConGbc = new GridBagConstraints();
-        roomConGbc.insets = new Insets(10, 10, 10, 10);
-
-        // Room related components
-        roomPanelCon.setVisible(true); // Initially visible
-        roomConGbc.gridx = 0;
-        roomConGbc.gridy = 7;
-        roomPanelCon.add(new JLabel("Is it required more than one room?"), roomConGbc);
-
-
-        // Create the JRadioButtons
-        yesMore = new JRadioButton("Yes");
-        noMore = new JRadioButton("No");
-
-        // Create a ButtonGroup to ensure only one radio button is selected at a time
-        moreRequired = new ButtonGroup();
-        moreRequired.add(yesMore);
-        moreRequired.add(noMore);
-
-        // Add radio buttons to the panel
-        roomConGbc.gridx = 1;
-        roomConGbc.gridy = 7;
-        roomPanelCon.add(yesMore, roomConGbc);
-
-        roomConGbc.gridx = 2;
-        roomPanelCon.add(noMore, roomConGbc);
-
-
-
-
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = 6;
         panel1.add(new JLabel("Is it mandatory?"), gbc);
 
         // Create the JRadioButtons
@@ -205,14 +167,14 @@ public class CreateAssessment extends JFrame {
 
         // Add radio buttons to the panel
         gbc.gridx = 1;
-        gbc.gridy = 8;
+        gbc.gridy = 6;
         panel1.add(yesMandatory, gbc);
 
         gbc.gridx = 2;
         panel1.add(noMandatory, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 9;
+        gbc.gridy = 7;
         panel1.add(createAssessmentButton, gbc);
         gbc.gridx = 1;
         panel1.add(calendarOptions, gbc);
