@@ -55,7 +55,7 @@ public class Course {
     public int getpercentageCourse() {
         return percentageCourse;
     }
-    public void setpercentageCourse(int percentageCourse) {}
+    public void setpercentageCourse(int percentageCourse) { }
 
     @Override
     public String toString() {
