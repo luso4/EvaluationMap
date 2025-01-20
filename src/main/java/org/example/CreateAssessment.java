@@ -109,7 +109,7 @@ public class CreateAssessment extends JFrame {
         // Room related components
         roomPanel.setVisible(true); // Initially visible
         roomGbc.gridx = 0;
-        roomGbc.gridy = 0;
+        roomGbc.gridy = 5;
         roomPanel.add(new JLabel("Is it required a room with computers?"), roomGbc);
 
 
@@ -124,11 +124,36 @@ public class CreateAssessment extends JFrame {
 
         // Add radio buttons to the panel
         roomGbc.gridx = 1;
-        roomGbc.gridy = 1;
+        roomGbc.gridy = 5;
         roomPanel.add(yesComputer, roomGbc);
 
         roomGbc.gridx = 2;
         roomPanel.add(noComputer, roomGbc);
+
+
+
+
+        //Selection of the Room
+        roomGbc.gridx = 0;
+        roomGbc.gridy = 6;
+        roomPanel.add(new JLabel("Room"), roomGbc);
+
+        // Create and populate the JComboBox with Assessments from the database
+        roomComboBox = new JComboBox<>();
+        populateRoomComboBox();
+        roomGbc.gridx = 1;
+        roomPanel.add(roomComboBox, roomGbc);
+
+
+
+
+        // Add room panel to the main panel
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 10; // Ensure it spans across the columns
+        panel1.add(roomPanel, gbc);
+
+
 
 
         //RC
@@ -141,7 +166,7 @@ public class CreateAssessment extends JFrame {
         // Room related components
         roomPanelCon.setVisible(true); // Initially visible
         roomConGbc.gridx = 0;
-        roomConGbc.gridy = 0;
+        roomConGbc.gridy = 7;
         roomPanelCon.add(new JLabel("Is it required more than one room?"), roomConGbc);
 
 
@@ -156,32 +181,17 @@ public class CreateAssessment extends JFrame {
 
         // Add radio buttons to the panel
         roomConGbc.gridx = 1;
-        roomConGbc.gridy = 1;
+        roomConGbc.gridy = 7;
         roomPanelCon.add(yesMore, roomConGbc);
 
         roomConGbc.gridx = 2;
         roomPanelCon.add(noMore, roomConGbc);
 
 
-        //Selection of the Room
-        roomGbc.gridx = 0;
-        roomGbc.gridy = 2;
-        roomPanel.add(new JLabel("Room"), roomGbc);
 
-        // Create and populate the JComboBox with Assessments from the database
-        roomComboBox = new JComboBox<>();
-        populateRoomComboBox();
-        roomGbc.gridx = 1;
-        roomPanel.add(roomComboBox, roomGbc);
-
-        // Add room panel to the main panel
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 10; // Ensure it spans across the columns
-        panel1.add(roomPanel, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 8;
         panel1.add(new JLabel("Is it mandatory?"), gbc);
 
         // Create the JRadioButtons
@@ -195,14 +205,14 @@ public class CreateAssessment extends JFrame {
 
         // Add radio buttons to the panel
         gbc.gridx = 1;
-        gbc.gridy = 6;
+        gbc.gridy = 8;
         panel1.add(yesMandatory, gbc);
 
         gbc.gridx = 2;
         panel1.add(noMandatory, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 9;
         panel1.add(createAssessmentButton, gbc);
         gbc.gridx = 1;
         panel1.add(calendarOptions, gbc);
@@ -244,7 +254,7 @@ public class CreateAssessment extends JFrame {
         });
     }
 
-    public String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
+    public String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
     public String DB_USER = "userSQL";
     public String DB_PASS = "password1";
     // Method to populate the JComboBox with courses from the database
@@ -280,19 +290,17 @@ public class CreateAssessment extends JFrame {
 
     public void populateRoomComboBox() {
         String type_of_material = "";
-        String more_of_room = "";
+        String sql = "";
         if (yesComputer.isSelected()){
-                if(yesMore.isSelected()){
-                    more_of_room = "where room_sits " ;
 
-            }
-            type_of_material = "where room_type_of_material = 'Computadores'";  // For rooms with computers
+            type_of_material = " AND  room_type_of_material = 'Computadores'";  // For rooms with computers
 
         } else if (noComputer.isSelected()){
-            type_of_material = "";  // For rooms without computers
+            type_of_material = "";
         }
 
-        String sql = "SELECT room_room FROM room " + type_of_material;
+        sql = "SELECT room_room FROM room WHERE room_seats >= " + course.getstudentNrCourse() + type_of_material;
+
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

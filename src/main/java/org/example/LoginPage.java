@@ -98,13 +98,13 @@ public class LoginPage extends JDialog {
     public User getAuthenticatedUser(String email, String password) {
         User user = null;
 
-        final String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
-        final String DB_USER = "userSQL";
-        final String DB_PASS = "password1";
+        final String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
+        final String USER = "userSQL";
+        final String PASS = "password1";
 
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setString(1, email);
