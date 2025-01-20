@@ -13,7 +13,7 @@ public class LoginPage extends JDialog {
     private JButton logginButton;
     private JButton cancelButton;
     public User user;
-
+    //JSL
     public LoginPage(JFrame parent) {
         super(parent);
         setTitle("Login");
