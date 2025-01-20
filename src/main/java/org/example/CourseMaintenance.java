@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
-
+//JSL
 public class CourseMaintenance extends JFrame {
     private JPanel panel1;
     private JComboBox<String> emailComboBox;
@@ -200,7 +200,7 @@ public class CourseMaintenance extends JFrame {
         setVisible(true);
     }
 
-    public String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
+    public String DB_URL = "jdbc:mariadb://192.168.21.151:3306/evaluationmap";
     public String DB_USER = "userSQL";
     public String DB_PASS = "password1";
     // Method to populate the JComboBox with emails from the database

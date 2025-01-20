@@ -10,12 +10,12 @@ public class Assessment {
     public int assessment_course_required_room;
     public int assessment_course_required_room_computer;
     public String assessment_course_room;
-    public int assessment_course_mandatorty;
+    public int assessment_course_mandatory;
 
 
     public Assessment(String assessment_course_email_user, String assessment_course_course, String assessment_course_assessment, int assessment_course_percentage,
                       String assessment_course_date, int assessment_course_required_room, int assessment_course_required_room_computer
-            , String assessment_course_room, int assessment_course_mandatorty) {
+            , String assessment_course_room, int assessment_course_mandatory) {
 
         this.assessment_course_email_user = assessment_course_email_user;
         this.assessment_course_course = assessment_course_course;
@@ -25,7 +25,7 @@ public class Assessment {
         this.assessment_course_required_room = assessment_course_required_room;
         this.assessment_course_required_room_computer = assessment_course_required_room_computer;
         this.assessment_course_room = assessment_course_room;
-        this.assessment_course_mandatorty = assessment_course_mandatorty;
+        this.assessment_course_mandatory = assessment_course_mandatory;
 
     }
 
@@ -82,7 +82,7 @@ public class Assessment {
     }
 
     public void setAssessment_course_required_room_computer(int assessment_course_required_room_computer) {
-        this.getAssessment_course_required_room_computer();
+        this.assessment_course_required_room_computer = assessment_course_required_room_computer;
     }
 
     public String getAssessment_course_room() {
@@ -93,12 +93,12 @@ public class Assessment {
         this.assessment_course_room = assessment_course_room;
     }
 
-    public int getAssessment_course_mandatorty() {
-        return assessment_course_mandatorty;
+    public int getAssessment_course_mandatory() {
+        return assessment_course_mandatory;
     }
 
-    public void setAssessment_course_mandatorty(int assessment_course_mandatorty) {
-        this.getAssessment_course_mandatorty();
+    public void setAssessment_course_mandatory(int assessment_course_mandatory) {
+        this.assessment_course_mandatory = assessment_course_mandatory;
     }
 
     //For the combobox
