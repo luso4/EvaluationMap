@@ -153,36 +153,6 @@ public class CreateAssessment extends JFrame {
         roomPanel.add(noComputer, roomGbc);
 
 
-        //RC
-
-        // Create and initialize the container panel for room-related components
-        JPanel roomPanelCon = new JPanel(new GridBagLayout());
-        GridBagConstraints roomConGbc = new GridBagConstraints();
-        roomConGbc.insets = new Insets(10, 10, 10, 10);
-
-        // Room related components
-        roomPanelCon.setVisible(true); // Initially visible
-        roomConGbc.gridx = 0;
-        roomConGbc.gridy = 0;
-        roomPanelCon.add(new JLabel("Is it required more than one room?"), roomConGbc);
-
-
-        // Create the JRadioButtons
-        yesMore = new JRadioButton("Yes");
-        noMore = new JRadioButton("No");
-
-        // Create a ButtonGroup to ensure only one radio button is selected at a time
-        moreRequired = new ButtonGroup();
-        moreRequired.add(yesMore);
-        moreRequired.add(noMore);
-
-        // Add radio buttons to the panel
-        roomConGbc.gridx = 1;
-        roomConGbc.gridy = 1;
-        roomPanelCon.add(yesMore, roomConGbc);
-
-        roomConGbc.gridx = 2;
-        roomPanelCon.add(noMore, roomConGbc);
 
 
         //Selection of the Room
@@ -195,10 +165,13 @@ public class CreateAssessment extends JFrame {
         roomGbc.gridx = 1;
         roomPanel.add(roomComboBox, roomGbc);
 
+        // Add room panel to the main panel
+
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 3;
         panel1.add(roomPanel, gbc);
+
 
         gbc.gridx = 0;
         gbc.gridy = 6;
@@ -238,7 +211,7 @@ public class CreateAssessment extends JFrame {
         });
     }
 
-    // Database URL, user, and password
+
     public static final String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
     public static final String DB_USER = "userSQL";
     public static final String DB_PASS = "password1";
@@ -266,10 +239,22 @@ public class CreateAssessment extends JFrame {
     }
 
 
-    private void populateRoomComboBox() {
-        String typeOfMaterial = yesComputer.isSelected() ? "WHERE room_type_of_material = 'Computadores'" : "";
-        String sql = "SELECT room_room FROM room " + typeOfMaterial;
+    public void populateRoomComboBox() {
+        String type_of_material = "";
+        String sql = "";
+        if (yesComputer.isSelected()){
 
+            type_of_material = " AND  room_type_of_material = 'Computadores'";  // For rooms with computers
+
+        } else if (noComputer.isSelected()){
+            type_of_material = "";
+        }
+
+        sql = "SELECT room_room FROM room WHERE room_seats >= " + course.getstudentNrCourse() + type_of_material;
+
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {
