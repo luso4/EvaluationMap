@@ -56,11 +56,11 @@ public class CreateAssessment extends JFrame {
         }
 
         setTitle("Create Assessment");
-<<<<<<< HEAD
+
         setSize(720, 480);
-=======
-        setSize(1280,720);
->>>>>>> 34e212e65593e78d4c0d51502f47e84cf180e37c
+
+        setSize(1280, 720);
+
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
@@ -101,16 +101,16 @@ public class CreateAssessment extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 3;
         panel1.add(new JLabel("Date"), gbc);
-<<<<<<< HEAD
+
 
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("yyyy-MM-dd");
-=======
+
         // Create a JDateChooser component for selecting the date
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("yyyy-MM-dd");  // Set the date format
 
->>>>>>> 34e212e65593e78d4c0d51502f47e84cf180e37c
+
         gbc.gridx = 1;
         panel1.add(dateChooser, gbc);
 
@@ -152,8 +152,6 @@ public class CreateAssessment extends JFrame {
         roomGbc.gridx = 2;
         roomPanel.add(noComputer, roomGbc);
 
-<<<<<<< HEAD
-=======
 
         //RC
 
@@ -188,7 +186,6 @@ public class CreateAssessment extends JFrame {
 
 
         //Selection of the Room
->>>>>>> 34e212e65593e78d4c0d51502f47e84cf180e37c
         roomGbc.gridx = 0;
         roomGbc.gridy = 2;
         roomPanel.add(new JLabel("Room"), roomGbc);
@@ -268,41 +265,25 @@ public class CreateAssessment extends JFrame {
         }
     }
 
-<<<<<<< HEAD
+
     private void populateRoomComboBox() {
         String typeOfMaterial = yesComputer.isSelected() ? "WHERE room_type_of_material = 'Computadores'" : "";
         String sql = "SELECT room_room FROM room " + typeOfMaterial;
-=======
-    public void populateRoomComboBox() {
-        String type_of_material = "";
-        String more_of_room = "";
-        if (yesComputer.isSelected()){
-                if(yesMore.isSelected()){
-                    more_of_room = "where room_sits " ;
 
-            }
-            type_of_material = "where room_type_of_material = 'Computadores'";  // For rooms with computers
 
-        } else if (noComputer.isSelected()){
-            type_of_material = "";  // For rooms without computers
-        }
-
-        String sql = "SELECT room_room FROM room " + type_of_material;
-
->>>>>>> 34e212e65593e78d4c0d51502f47e84cf180e37c
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            try (ResultSet rs = pstmt.executeQuery()) {
-                roomComboBox.removeAllItems();
-                while (rs.next()) {
-                    roomComboBox.addItem(rs.getString("room_room"));
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    roomComboBox.removeAllItems();
+                    while (rs.next()) {
+                        roomComboBox.addItem(rs.getString("room_room"));
+                    }
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(panel1, "Failed to fetch room from the database.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(panel1, "Failed to fetch room from the database.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
 
     private void addAssessmentCourse() {
         String email_user = user.getEmail();
@@ -316,7 +297,7 @@ public class CreateAssessment extends JFrame {
         int course_room = Integer.parseInt(selectedRoom);
         int assessment_mandatory = yesMandatory.isSelected() ? 1 : 0;
 
-        //IF it his being alter
+        // IF it is being altered
         if (assessment != null) {
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
                 String updateQuery = "UPDATE assessmentcourse SET " +
@@ -345,21 +326,18 @@ public class CreateAssessment extends JFrame {
 
                     pstmt1.executeUpdate();
 
-
                     String sqlInsert2 = "UPDATE course " +
                             "SET course_number_assessment = ?, assessment_mandatory_number_course = ?, percentage_course = ? " +
                             "WHERE course_course = ?";
                     try (PreparedStatement pstmt2 = conn.prepareStatement(sqlInsert2)) {
                         pstmt2.setInt(1, course.getcourseAssessmentNr());
-                        if(yesMandatory.isSelected()) {
+                        if (yesMandatory.isSelected()) {
                             pstmt2.setInt(2, course.getassessmentMandatoryNumberCourse() + 1);
-                        }
-                        else
-                        {
+                        } else {
                             pstmt2.setInt(2, course.getassessmentMandatoryNumberCourse() - 1);
                         }
 
-                        pstmt2.setInt(3, course.getpercentageCourse() - assessment.getAssessment_course_percentage() + percentage); //See the global percentage remove the percentage of the assessment before the changes then add the new percentage
+                        pstmt2.setInt(3, course.getpercentageCourse() - assessment.getAssessment_course_percentage() + percentage); // Adjust the global percentage
                         pstmt2.setString(4, course.getcourseCourse());
                         pstmt2.executeUpdate();
                     }
@@ -367,13 +345,8 @@ public class CreateAssessment extends JFrame {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-
-        }
-        //If it is being created
-        else
-        {
-
+        } else {
+            // If it is being created
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
                 try (PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO assessmentcourse " +
                         "(assessment_course_email_user, assessment_course_course, " +
@@ -401,11 +374,9 @@ public class CreateAssessment extends JFrame {
                         "WHERE course_course = ?";
                 try (PreparedStatement pstmt2 = conn.prepareStatement(sqlInsert2)) {
                     pstmt2.setInt(1, course.getcourseAssessmentNr() + 1);
-                    if(yesMandatory.isSelected()) {
+                    if (yesMandatory.isSelected()) {
                         pstmt2.setInt(2, course.getassessmentMandatoryNumberCourse() + 1);
-                    }
-                    else
-                    {
+                    } else {
                         pstmt2.setInt(2, course.getassessmentMandatoryNumberCourse());
                     }
                     pstmt2.setInt(3, course.getpercentageCourse() + percentage);
@@ -420,7 +391,7 @@ public class CreateAssessment extends JFrame {
                 JOptionPane.showMessageDialog(null, "Error while inserting assessment: " + e.getMessage());
             }
         }
-
-
     }
+
+
 }
