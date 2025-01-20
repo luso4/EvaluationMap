@@ -98,11 +98,8 @@ public class LoginPage extends JDialog {
    public User getAuthenticatedUser(String email, String password) {
         User user = null;
 
-<<<<<<< HEAD
+
         final String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
-=======
-        final String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
->>>>>>> 410fd77cdab302eaf1614efb090e07f13b72e3bb
         final String USER = "userSQL";
         final String PASS = "password1";
 
