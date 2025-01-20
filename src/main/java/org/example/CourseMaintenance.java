@@ -273,7 +273,7 @@ public class CourseMaintenance extends JFrame {
 
     // Method to remove an email from the database
     public void removeCourseFromDatabase(String email, String courseName) {
-        String sql = "DELETE FROM assessmentcourse WHERE email_course = ? AND course_course = ?";
+        String sql = "DELETE FROM course WHERE email_course = ? AND course_course = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
