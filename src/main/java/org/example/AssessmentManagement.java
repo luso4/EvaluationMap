@@ -6,15 +6,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.SwingUtilities;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
 public class AssessmentManagement extends JFrame {
     private JPanel panel1;
-    private JComboBox<String> assessmentcombobox;  // Assuming this is for assessments related to the course
+    private JComboBox<Assessment> assessmentcombobox;  // Assuming this is for assessments related to the course
     private JButton select;
     private JButton exit;
     private JButton create;
     public User user;
     public Course course;
+    public Assessment assessment;
 
     public AssessmentManagement(User user, Course selectedCourse) {
         this.user = user;
@@ -65,7 +75,7 @@ public class AssessmentManagement extends JFrame {
                     gbc.gridy = 1;
                     panel1.add(new JLabel("You have " + course.getpercentageCourse() + "%. Please insert the remaning " + (100 - course.getpercentageCourse()) + "%."), gbc);
                 }
-            assessmentcombobox = new JComboBox<>();
+            assessmentcombobox = new JComboBox<Assessment>();
             populateAssessmentCombobox();
 
             gbc.gridx = 0;
@@ -103,10 +113,14 @@ public class AssessmentManagement extends JFrame {
         select.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedAssessment = (String) assessmentcombobox.getSelectedItem();
+                Assessment selectedAssessment = (Assessment) assessmentcombobox.getSelectedItem();
+
                 if (selectedAssessment != null) {
-                    // Handle assessment selection
-                    JOptionPane.showMessageDialog(panel1, "Selected Assessment: " + selectedAssessment);
+                    // Open CreateAssessment with the selected assessment's data
+                    new CreateAssessment(user, course, selectedAssessment);
+                    dispose();  // Close the current window
+                } else {
+                    JOptionPane.showMessageDialog(panel1, "Assessment not found!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -116,8 +130,7 @@ public class AssessmentManagement extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle create assessment action
-                JOptionPane.showMessageDialog(panel1, "Creating a new assessment...");
-                new CreateAssessment(user, course);  // Assuming CreateAssessment has a constructor that accepts User and Course
+                new CreateAssessment(user, course, null);  // Assuming CreateAssessment has a constructor that accepts User and Course
                 dispose();  // Close the current window
             }
         });
@@ -131,35 +144,76 @@ public class AssessmentManagement extends JFrame {
             }
         });
     }
-    public String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
+    public String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
     public String DB_USER = "userSQL";
     public String DB_PASS = "password1";
     // Method to populate the JComboBox with courses from the database
+
     public void populateAssessmentCombobox() {
-        String sql = "Select assessment_course_date from assessmentcourse where assessment_course_course = '" + course.getcourseCourse() + "' and assessment_course_email_user = '" + user.getEmail() + "'";
+        // SQL query to fetch the assessments based on the course and user email
+        String sql = "SELECT assessment_course_email_user, assessment_course_course, assessment_course_assessment, assessment_course_percentage, assessment_course_date, assessment_course_required_room, assessment_course_required_room_computer, assessment_course_room, assessment_course_mandatory FROM assessmentcourse WHERE assessment_course_course = ? AND assessment_course_email_user = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                ArrayList<String> assessments = new ArrayList<>();
+            // Set the parameters for the course and user email
+            pstmt.setString(1, course.getcourseCourse());  // course.getcourseCourse() gets the course name
+            pstmt.setString(2, user.getEmail());  // user.getEmail() gets the user's email
 
-                // Loop through the result set and add the courses to the list
+            try (ResultSet rs = pstmt.executeQuery()) {
+                ArrayList<Assessment> assessments = new ArrayList<>();
+                Map<String, Assessment> dateToAssessmentMap = new HashMap<>(); // Map to store date to assessment
+
+                // Loop through the result set and create Assessment objects
                 while (rs.next()) {
-                    String assessment = rs.getString("assessment_course_date");
-                    assessments.add(assessment);  // Add the course to the list
+                    String assessmentCourseEmailUser = rs.getString("assessment_course_email_user");
+                    String assessmentCourseCourse = rs.getString("assessment_course_course");
+                    String assessmentCourseAssessment = rs.getString("assessment_course_assessment");
+                    int assessmentCoursePercentage = rs.getInt("assessment_course_percentage");
+
+                    // Get the date as a java.sql.Date
+                    Date sqlDate = rs.getDate("assessment_course_date");
+
+                    // Format the Date as a String
+                    if (sqlDate != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Change format as needed
+                        String formattedDate = sdf.format(sqlDate);
+
+                        // Create the Assessment object
+                        Assessment assessment1 = new Assessment(
+                                assessmentCourseEmailUser,
+                                assessmentCourseCourse,
+                                assessmentCourseAssessment,
+                                assessmentCoursePercentage,
+                                formattedDate,
+                                rs.getInt("assessment_course_required_room"),
+                                rs.getInt("assessment_course_required_room_computer"),
+                                rs.getString("assessment_course_room"),
+                                rs.getInt("assessment_course_mandatory")
+                        );
+
+                        assessments.add(assessment1);  // Store the full Assessment object
+                        dateToAssessmentMap.put(formattedDate, assessment1);  // Map the formatted date to the Assessment object
+                    }
                 }
+
                 // Update the ComboBox on the EDT to ensure UI responsiveness
                 SwingUtilities.invokeLater(() -> {
-                    for (String assessment : assessments) {
-                        assessmentcombobox.addItem(assessment);  // Add assessment to the combo box
+                    // Clear existing items from ComboBox before adding new ones
+                    assessmentcombobox.removeAllItems();
+
+                    // Add each date to the ComboBox
+                    for (Assessment assessment : assessments) {
+                        // Add formatted date to the ComboBox (show date but store full Assessment object)
+                        assessmentcombobox.addItem(assessment);  // Add formatted date to combo box
                     }
                 });
 
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(panel1, "Failed to fetch assessment from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel1, "Failed to fetch assessments from the database.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }
