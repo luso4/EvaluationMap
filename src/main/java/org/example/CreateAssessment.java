@@ -12,8 +12,8 @@ public class CreateAssessment extends JFrame {
     private JComboBox<String> assessmentComboBox;
     private JSpinner PercentageTextField;
     private JComboBox<String> roomComboBox;
-    private JRadioButton yesComputer, noComputer;
-    private ButtonGroup computerRequired;
+    private JRadioButton yesComputer, noComputer, yesMore, noMore;
+    private ButtonGroup computerRequired, moreRequired;
     private JRadioButton yesMandatory, noMandatory;
     private ButtonGroup mandatory;
     private JRadioButton yesRoom, noRoom;
@@ -56,7 +56,11 @@ public class CreateAssessment extends JFrame {
         }
 
         setTitle("Create Assessment");
+<<<<<<< HEAD
         setSize(720, 480);
+=======
+        setSize(1280,720);
+>>>>>>> 34e212e65593e78d4c0d51502f47e84cf180e37c
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
@@ -97,9 +101,16 @@ public class CreateAssessment extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 3;
         panel1.add(new JLabel("Date"), gbc);
+<<<<<<< HEAD
 
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("yyyy-MM-dd");
+=======
+        // Create a JDateChooser component for selecting the date
+        dateChooser = new JDateChooser();
+        dateChooser.setDateFormatString("yyyy-MM-dd");  // Set the date format
+
+>>>>>>> 34e212e65593e78d4c0d51502f47e84cf180e37c
         gbc.gridx = 1;
         panel1.add(dateChooser, gbc);
 
@@ -141,6 +152,43 @@ public class CreateAssessment extends JFrame {
         roomGbc.gridx = 2;
         roomPanel.add(noComputer, roomGbc);
 
+<<<<<<< HEAD
+=======
+
+        //RC
+
+        // Create and initialize the container panel for room-related components
+        JPanel roomPanelCon = new JPanel(new GridBagLayout());
+        GridBagConstraints roomConGbc = new GridBagConstraints();
+        roomConGbc.insets = new Insets(10, 10, 10, 10);
+
+        // Room related components
+        roomPanelCon.setVisible(true); // Initially visible
+        roomConGbc.gridx = 0;
+        roomConGbc.gridy = 0;
+        roomPanelCon.add(new JLabel("Is it required more than one room?"), roomConGbc);
+
+
+        // Create the JRadioButtons
+        yesMore = new JRadioButton("Yes");
+        noMore = new JRadioButton("No");
+
+        // Create a ButtonGroup to ensure only one radio button is selected at a time
+        moreRequired = new ButtonGroup();
+        moreRequired.add(yesMore);
+        moreRequired.add(noMore);
+
+        // Add radio buttons to the panel
+        roomConGbc.gridx = 1;
+        roomConGbc.gridy = 1;
+        roomPanelCon.add(yesMore, roomConGbc);
+
+        roomConGbc.gridx = 2;
+        roomPanelCon.add(noMore, roomConGbc);
+
+
+        //Selection of the Room
+>>>>>>> 34e212e65593e78d4c0d51502f47e84cf180e37c
         roomGbc.gridx = 0;
         roomGbc.gridy = 2;
         roomPanel.add(new JLabel("Room"), roomGbc);
@@ -220,9 +268,28 @@ public class CreateAssessment extends JFrame {
         }
     }
 
+<<<<<<< HEAD
     private void populateRoomComboBox() {
         String typeOfMaterial = yesComputer.isSelected() ? "WHERE room_type_of_material = 'Computadores'" : "";
         String sql = "SELECT room_room FROM room " + typeOfMaterial;
+=======
+    public void populateRoomComboBox() {
+        String type_of_material = "";
+        String more_of_room = "";
+        if (yesComputer.isSelected()){
+                if(yesMore.isSelected()){
+                    more_of_room = "where room_sits " ;
+
+            }
+            type_of_material = "where room_type_of_material = 'Computadores'";  // For rooms with computers
+
+        } else if (noComputer.isSelected()){
+            type_of_material = "";  // For rooms without computers
+        }
+
+        String sql = "SELECT room_room FROM room " + type_of_material;
+
+>>>>>>> 34e212e65593e78d4c0d51502f47e84cf180e37c
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = pstmt.executeQuery()) {
