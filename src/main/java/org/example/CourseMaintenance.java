@@ -200,7 +200,7 @@ public class CourseMaintenance extends JFrame {
         setVisible(true);
     }
 
-    public String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
+    public String DB_URL = "jdbc:mariadb://192.168.21.151:3306/evaluationmap";
     public String DB_USER = "userSQL";
     public String DB_PASS = "password1";
     // Method to populate the JComboBox with emails from the database
@@ -273,7 +273,7 @@ public class CourseMaintenance extends JFrame {
 
     // Method to remove an email from the database
     public void removeCourseFromDatabase(String email, String courseName) {
-        String sql = "DELETE FROM course WHERE email_course = ? AND course_course = ?";
+        String sql = "DELETE FROM assessmentcourse WHERE email_course = ? AND course_course = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement stmt = conn.prepareStatement(sql)) {

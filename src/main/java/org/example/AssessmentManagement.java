@@ -1,5 +1,6 @@
 package org.example;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
+
+
 public class AssessmentManagement extends JFrame {
     private JPanel panel1;
     private JComboBox<Assessment> assessmentcombobox;  // Assuming this is for assessments related to the course
@@ -25,10 +28,12 @@ public class AssessmentManagement extends JFrame {
     public User user;
     public Course course;
     public Assessment assessment;
+    private JButton remove;
 
     public AssessmentManagement(User user, Course selectedCourse) {
         this.user = user;
         this.course = selectedCourse;
+
 
         // Frame setup
         setTitle("Assessment Management");
@@ -41,40 +46,38 @@ public class AssessmentManagement extends JFrame {
         select = new JButton("Select Assessment");
         exit = new JButton("Return to Course Maintenance");
         create = new JButton("Create Assessment");
+        remove = new JButton("Remove Assessment");
 
         // Set up GridBagLayout constraints
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
         //when there is no assessments
-        if (course.getassessmentMandatoryNumberCourse() == 0)
-        {
+        if (course.getassessmentMandatoryNumberCourse() == 0) {
             gbc.gridx = 0;
             gbc.gridy = 0;
             panel1.add(new JLabel("You have no assessments. You must create x assessments."), gbc);
         }
         //when there is some assessments
         else {
-                //If it is a continuous course
-                if (course.getassessmentMandatoryNumberCourse() < 3 && course.getmixedcourse() == 0) {
-                    gbc.gridx = 0;
-                    gbc.gridy = 0;
-                    panel1.add(new JLabel("You have " + course.getassessmentMandatoryNumberCourse() + " mandatory assessments. Please insert " + (3 - course.getassessmentMandatoryNumberCourse()) + " more."), gbc);
-                }
-                //If it is a mixed course
-                //NEED TO ADD A CONDITION FOR EXAMS
-                else if (course.getassessmentMandatoryNumberCourse() < 2 && course.getmixedcourse() == 1)
-                {
-                    gbc.gridx = 0;
-                    gbc.gridy = 0;
-                    panel1.add(new JLabel("You have " + course.getassessmentMandatoryNumberCourse() + " mandatory assessments. Please insert " + (3 - course.getassessmentMandatoryNumberCourse()) + " more."), gbc);
-                }
-                if(course.getpercentageCourse()<= 100)
-                {
-                    gbc.gridx = 0;
-                    gbc.gridy = 1;
-                    panel1.add(new JLabel("You have " + course.getpercentageCourse() + "%. Please insert the remaning " + (100 - course.getpercentageCourse()) + "%."), gbc);
-                }
+            //If it is a continuous course
+            if (course.getassessmentMandatoryNumberCourse() < 3 && course.getmixedcourse() == 0) {
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                panel1.add(new JLabel("You have " + course.getassessmentMandatoryNumberCourse() + " mandatory assessments. Please insert " + (3 - course.getassessmentMandatoryNumberCourse()) + " more."), gbc);
+            }
+            //If it is a mixed course
+            //NEED TO ADD A CONDITION FOR EXAMS
+            else if (course.getassessmentMandatoryNumberCourse() < 2 && course.getmixedcourse() == 1) {
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                panel1.add(new JLabel("You have " + course.getassessmentMandatoryNumberCourse() + " mandatory assessments. Please insert " + (3 - course.getassessmentMandatoryNumberCourse()) + " more."), gbc);
+            }
+            if (course.getpercentageCourse() <= 100) {
+                gbc.gridx = 0;
+                gbc.gridy = 1;
+                panel1.add(new JLabel("You have " + course.getpercentageCourse() + "%. Please insert the remaning " + (100 - course.getpercentageCourse()) + "%."), gbc);
+            }
             assessmentcombobox = new JComboBox<Assessment>();
             populateAssessmentCombobox();
 
@@ -93,6 +96,9 @@ public class AssessmentManagement extends JFrame {
         panel1.add(create, gbc);
 
         gbc.gridy = 5;
+        panel1.add(remove, gbc);
+
+        gbc.gridy = 6;
         panel1.add(exit, gbc);
 
         // Set the panel as the content pane
@@ -135,6 +141,24 @@ public class AssessmentManagement extends JFrame {
             }
         });
 
+        //DElete assessment
+        remove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Assessment selectedAssessment = (Assessment) assessmentcombobox.getSelectedItem();
+                if (selectedAssessment != null) {
+                    String assessmentDate = selectedAssessment.getAssessment_course_date();
+                    int assessmentMandatory = selectedAssessment.getAssessment_course_mandatory();
+                    int assessmentPercentage = selectedAssessment.getAssessment_course_percentage();
+                    removeAssessmentFromDatabase(assessmentDate, assessmentMandatory, assessmentPercentage);
+                }
+                else {
+                    JOptionPane.showMessageDialog(panel1, "Assessment not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+
         // Exit button listener
         exit.addActionListener(new ActionListener() {
             @Override
@@ -144,10 +168,12 @@ public class AssessmentManagement extends JFrame {
             }
         });
     }
-    public String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
+
+
+    public String DB_URL = "jdbc:mariadb://192.168.21.151:3306/evaluationmap";
     public String DB_USER = "userSQL";
     public String DB_PASS = "password1";
-    // Method to populate the JComboBox with courses from the database
+// Method to populate the JComboBox with courses from the database
 
     public void populateAssessmentCombobox() {
         // SQL query to fetch the assessments based on the course and user email
@@ -156,25 +182,25 @@ public class AssessmentManagement extends JFrame {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            // Set the parameters for the course and user email
-            pstmt.setString(1, course.getcourseCourse());  // course.getcourseCourse() gets the course name
-            pstmt.setString(2, user.getEmail());  // user.getEmail() gets the user's email
+
+            pstmt.setString(1, course.getcourseCourse());
+            pstmt.setString(2, user.getEmail());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 ArrayList<Assessment> assessments = new ArrayList<>();
-                Map<String, Assessment> dateToAssessmentMap = new HashMap<>(); // Map to store date to assessment
+                Map<String, Assessment> dateToAssessmentMap = new HashMap<>();
 
-                // Loop through the result set and create Assessment objects
+
                 while (rs.next()) {
                     String assessmentCourseEmailUser = rs.getString("assessment_course_email_user");
                     String assessmentCourseCourse = rs.getString("assessment_course_course");
                     String assessmentCourseAssessment = rs.getString("assessment_course_assessment");
                     int assessmentCoursePercentage = rs.getInt("assessment_course_percentage");
 
-                    // Get the date as a java.sql.Date
+
                     Date sqlDate = rs.getDate("assessment_course_date");
 
-                    // Format the Date as a String
+
                     if (sqlDate != null) {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Change format as needed
                         String formattedDate = sdf.format(sqlDate);
@@ -192,20 +218,18 @@ public class AssessmentManagement extends JFrame {
                                 rs.getInt("assessment_course_mandatory")
                         );
 
-                        assessments.add(assessment1);  // Store the full Assessment object
-                        dateToAssessmentMap.put(formattedDate, assessment1);  // Map the formatted date to the Assessment object
+                        assessments.add(assessment1);
+                        dateToAssessmentMap.put(formattedDate, assessment1);
                     }
                 }
 
-                // Update the ComboBox on the EDT to ensure UI responsiveness
+
                 SwingUtilities.invokeLater(() -> {
-                    // Clear existing items from ComboBox before adding new ones
                     assessmentcombobox.removeAllItems();
 
                     // Add each date to the ComboBox
                     for (Assessment assessment : assessments) {
-                        // Add formatted date to the ComboBox (show date but store full Assessment object)
-                        assessmentcombobox.addItem(assessment);  // Add formatted date to combo box
+                        assessmentcombobox.addItem(assessment);
                     }
                 });
 
@@ -216,4 +240,65 @@ public class AssessmentManagement extends JFrame {
         }
     }
 
+    public void removeAssessmentFromDatabase(String assessmentDate, int assessmentMandatory, int assessmentPercentage) {
+        String sql = "DELETE FROM assessmentcourse WHERE assessment_course_email_user = ? AND assessment_course_course = ? AND assessment_course_date = ?";
+        int assessmentDeleted = 0;
+        int courseDeleted = 0;
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user.getEmail());
+            stmt.setString(2, course.getcourseCourse());
+            stmt.setString(3,assessmentDate);
+            assessmentDeleted = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(panel1, "Failed to remove assessment from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String sql2 = "Update course set course_number_assessment = ?, assessment_mandatory_number_course = ?, percentage_course = ? WHERE email_course = ? AND course_course = ? ";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement stmt2 = conn.prepareStatement(sql2)) {
+
+            stmt2.setInt(1,course.getcourseAssessmentNr()-1);
+            if(assessmentMandatory == 1)
+            {
+                stmt2.setInt(2,course.getassessmentMandatoryNumberCourse()-1);
+            }
+            else
+            {
+                stmt2.setInt(2,course.getassessmentMandatoryNumberCourse());
+            }
+            stmt2.setInt(3,course.getpercentageCourse()-assessmentPercentage);
+            stmt2.setString(4, user.getEmail());
+            stmt2.setString(5, course.getcourseCourse());
+
+            courseDeleted =stmt2.executeUpdate();
+        }
+
+
+        catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(panel1, "Failed to update course.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(courseDeleted >= 1 && assessmentDeleted >=1)
+        {
+            JOptionPane.showMessageDialog(panel1, "Assessment Deleted", "Success", JOptionPane.ERROR_MESSAGE);
+            course.setcourseAssessmentNr(course.getcourseAssessmentNr()-1);
+            if(assessmentMandatory == 1) {
+                course.setassessmentMandatoryNumberCourse(course.getassessmentMandatoryNumberCourse() - 1);
+            }
+            course.setpercentageCourse(course.getpercentageCourse() - assessmentPercentage);
+            dispose();
+            new AssessmentManagement(user, course);
+        }else
+        {
+            JOptionPane.showMessageDialog(panel1, "No Assessment was deleted", "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    }
 }
+

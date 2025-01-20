@@ -47,7 +47,7 @@ public class CreateAssessment extends JFrame {
             } else {
                 noComputer.setSelected(true);   // If computer is not required, select "No"
             }
-            int mandatory = assessment.getAssessment_course_mandatorty();
+            int mandatory = assessment.getAssessment_course_mandatory();
             if (mandatory == 1) {
                 yesMandatory.setSelected(true);  // If it is mandatory, select "Yes"
             } else {
@@ -239,7 +239,7 @@ public class CreateAssessment extends JFrame {
     }
 
     // Database URL, user, and password
-    public static final String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
+    public static final String DB_URL = "jdbc:mariadb://192.168.21.151:3306/evaluationmap";
     public static final String DB_USER = "userSQL";
     public static final String DB_PASS = "password1";
 
