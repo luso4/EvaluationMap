@@ -6,6 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JCalendar;
+//import com.toedter.calendar.SelectableDateFilter;
+
+
 
 public class CreateAssessment extends JFrame {
     private JPanel panel1;
@@ -57,9 +61,7 @@ public class CreateAssessment extends JFrame {
 
         setTitle("Create Assessment");
 
-        setSize(720, 480);
-
-        setSize(1280, 720);
+        setSize(1280, 800);
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -68,7 +70,7 @@ public class CreateAssessment extends JFrame {
     private void initComponents() {
         panel1 = new JPanel(new GridBagLayout());
         createAssessmentButton = new JButton("Create Assessment");
-        calendarOptions = new JButton("Return to Calendar Options");
+        calendarOptions = new JButton("Return to Course Management");
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -102,21 +104,44 @@ public class CreateAssessment extends JFrame {
         gbc.gridy = 3;
         panel1.add(new JLabel("Date"), gbc);
 
-
+        gbc.gridx = 1;
+        gbc.gridy = 3;
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("yyyy-MM-dd");
-
-        // Create a JDateChooser component for selecting the date
-        dateChooser = new JDateChooser();
-        dateChooser.setDateFormatString("yyyy-MM-dd");  // Set the date format
-
 
         gbc.gridx = 1;
         panel1.add(dateChooser, gbc);
 
+
+        // Create hour JComboBox (0-24)
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        panel1.add(new JLabel("Hour"), gbc);
+
+        JComboBox<Integer> hourComboBox = new JComboBox<>();
+        for (int i = 0; i <= 24; i++) {
+            hourComboBox.addItem(i);
+        }
+        gbc.gridx = 1;
+        panel1.add(hourComboBox, gbc);
+
+        // Create minute JComboBox (0-60)
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        panel1.add(new JLabel("Minute"), gbc);
+
+        JComboBox<Integer> minuteComboBox = new JComboBox<>();
+        for (int i = 0; i < 60; i++) {
+            minuteComboBox.addItem(i);
+        }
+        gbc.gridx = 1;
+        panel1.add(minuteComboBox, gbc);
+
+
+
         // Room related components
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 7;
         panel1.add(new JLabel("Is it required a room?"), gbc);
 
         yesRoom = new JRadioButton("Yes");
@@ -153,8 +178,6 @@ public class CreateAssessment extends JFrame {
         roomPanel.add(noComputer, roomGbc);
 
 
-
-
         //Selection of the Room
         roomGbc.gridx = 0;
         roomGbc.gridy = 2;
@@ -168,13 +191,13 @@ public class CreateAssessment extends JFrame {
         // Add room panel to the main panel
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 8;
         gbc.gridwidth = 3;
         panel1.add(roomPanel, gbc);
 
 
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 9;
         panel1.add(new JLabel("Is it mandatory?"), gbc);
 
         yesMandatory = new JRadioButton("Yes");
@@ -184,13 +207,13 @@ public class CreateAssessment extends JFrame {
         mandatory.add(noMandatory);
 
         gbc.gridx = 1;
-        gbc.gridy = 6;
+        gbc.gridy = 9;
         panel1.add(yesMandatory, gbc);
         gbc.gridx = 2;
         panel1.add(noMandatory, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 10;
         panel1.add(createAssessmentButton, gbc);
         gbc.gridx = 1;
         panel1.add(calendarOptions, gbc);
@@ -213,10 +236,9 @@ public class CreateAssessment extends JFrame {
 
 
     // Database URL, user, and password
-    public static final String DB_URL = "jdbc:mariadb://192.168.21.151:3306/evaluationmap";
+    public static final String DB_URL = "jdbc:mariadb://192.168.18.151:3306/evaluationmap";
 
 
-    
     public static final String DB_USER = "userSQL";
     public static final String DB_PASS = "password1";
 
@@ -378,5 +400,44 @@ public class CreateAssessment extends JFrame {
         }
     }
 
+    /* private void disableSelectedDates() {
+        String sql = "SELECT ac.assessment_course_date " +
+                "FROM assessmentcourse ac " +
+                "JOIN course c ON ac.assessment_course_email_user = c.email_course " +
+                "AND ac.assessment_course_course = c.course_course " +
+                "WHERE c.course_year = ? AND c.department_course = ?";
 
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, course.getyearCourse());
+            pstmt.setString(2, course.getDepartmentCourse());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                ArrayList<Date> unavailableDates = new ArrayList<>();
+                while (rs.next()) {
+                    Date takenDate = rs.getDate("assessment_course_date");
+                    unavailableDates.add(takenDate);
+                }
+
+
+
+                JCalendar jCalendar = dateChooser.getJCalendar();
+                jCalendar.setSelectableDateFilter(date -> {
+
+                        for (Date unavailableDate : unavailableDates) {
+
+                            if (date.equals(unavailableDate)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                });
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(panel1, "Failed to fetch unavailable dates from the database.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }*/
 }

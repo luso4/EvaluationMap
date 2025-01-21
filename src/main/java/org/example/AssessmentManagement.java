@@ -43,7 +43,7 @@ public class AssessmentManagement extends JFrame {
 
         // Initialize the panel
         panel1 = new JPanel(new GridBagLayout());
-        select = new JButton("Select Assessment");
+        select = new JButton("Modify Assessment");
         exit = new JButton("Return to Course Maintenance");
         create = new JButton("Create Assessment");
         remove = new JButton("Remove Assessment");
@@ -136,8 +136,14 @@ public class AssessmentManagement extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle create assessment action
-                new CreateAssessment(user, course, null);  // Assuming CreateAssessment has a constructor that accepts User and Course
-                dispose();  // Close the current window
+                if (course.getpercentageCourse()>= 100)
+                {
+                    JOptionPane.showMessageDialog(panel1, "You already have 100 or more precentage you cannot create another assessment.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                else {
+                    new CreateAssessment(user, course, null);  // Assuming CreateAssessment has a constructor that accepts User and Course
+                    dispose();  // Close the current window
+                }
             }
         });
 
@@ -163,14 +169,14 @@ public class AssessmentManagement extends JFrame {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Close the window and return to previous screen
+                new CalendarOptions(user);
                 dispose();
             }
         });
     }
 
 
-    public String DB_URL = "jdbc:mariadb://192.168.21.151:3306/evaluationmap";
+    public String DB_URL = "jdbc:mariadb://192.168.18.151:3306/evaluationmap";
     public String DB_USER = "userSQL";
     public String DB_PASS = "password1";
 // Method to populate the JComboBox with courses from the database
