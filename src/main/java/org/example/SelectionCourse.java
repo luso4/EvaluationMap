@@ -73,13 +73,13 @@ public class SelectionCourse extends JFrame {
         setVisible(true);
     }
 
-    public String DB_URL = "jdbc:mariadb://192.168.21.151:3306/evaluationmap";
+    public String DB_URL = "jdbc:mariadb://192.168.18.151:3306/evaluationmap";
     public String DB_USER = "userSQL";
     public String DB_PASS = "password1";
     // Method to populate the JComboBox with courses from the database
     public void populateCourseComboBox() {
         // SQL query with a placeholder for the email
-        String sql = "SELECT course_course, course_number_assessment, number_student_course, mixed_course, assessment_mandatory_number_course, percentage_course  FROM course WHERE email_course = ?";
+        String sql = "SELECT course_course, course_number_assessment, number_student_course, mixed_course, assessment_mandatory_number_course, percentage_course, course_year, department_course  FROM course WHERE email_course = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              // Use PreparedStatement to safely insert the email
@@ -99,9 +99,11 @@ public class SelectionCourse extends JFrame {
                     int mixedCourse =rs.getInt("mixed_course");
                     int assessmentMandatoryNumberCourse =rs.getInt("assessment_mandatory_number_course");
                     int percentageCourse = rs.getInt("percentage_course");
+                    int yearCourse = rs.getInt("course_year");
+                    String departmentCourse = rs.getString("department_course");
 
                     // Create a new Course object and add it to the list
-                    Course course = new Course(courseCourse, courseAssessmentNr, studentNrCourse, mixedCourse, assessmentMandatoryNumberCourse, percentageCourse);
+                    Course course = new Course(courseCourse, courseAssessmentNr, studentNrCourse, mixedCourse, assessmentMandatoryNumberCourse, percentageCourse, yearCourse, departmentCourse);
                     courses.add(course);
                 }
 

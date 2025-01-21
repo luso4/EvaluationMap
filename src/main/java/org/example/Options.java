@@ -23,7 +23,7 @@ public class Options extends JFrame {
         // Initialize the panel and buttons
         panel1 = new JPanel(new GridBagLayout());
         UserManagement = new JButton("User Management");
-        Calendar = new JButton("Calendar");
+        Calendar = new JButton("Course Management");
         Exit = new JButton("Sign Off");
 
         GridBagConstraints gbc = new GridBagConstraints();
