@@ -6,14 +6,20 @@ public class Course {
     private int studentNrCourse;
     private int mixedcourse;
     private int assessmentMandatoryNumberCourse ;
+    private int percentageCourse ;
+    private int yearCourse ;
+    private String DepartmentCourse;
 
     // Constructor
-    public Course(String courseCourse, int courseAssessmentNr, int studentNrCourse, int mixedcourse, int assessmentMandatoryNumberCourse) {
+    public Course(String courseCourse, int courseAssessmentNr, int studentNrCourse, int mixedcourse, int assessmentMandatoryNumberCourse, int percentageCourse, int yearCourse, String DepartmentCourse) {
         this.courseCourse = courseCourse;
         this.courseAssessmentNr = courseAssessmentNr;
         this.studentNrCourse = studentNrCourse;
         this.mixedcourse = mixedcourse;
         this.assessmentMandatoryNumberCourse = assessmentMandatoryNumberCourse;
+        this.percentageCourse = percentageCourse;
+        this.yearCourse = yearCourse;
+        this.DepartmentCourse = DepartmentCourse;
     }
 
     public String getcourseCourse() {
@@ -49,6 +55,24 @@ public class Course {
         return assessmentMandatoryNumberCourse;
     }
     public void setassessmentMandatoryNumberCourse(int assessmentMandatoryNumberCourse) {}
+
+    public int getpercentageCourse() {
+        return percentageCourse;
+    }
+    public void setpercentageCourse(int percentageCourse) { }
+
+    public int getyearCourse() {
+        return yearCourse;
+    }
+    public void setYearCourse(int yearCourse){
+        this.yearCourse = yearCourse;
+     }
+     public String getDepartmentCourse() {
+        return DepartmentCourse;
+     }
+     public void setDepartmentCourse(String DepartmentCourse) {
+        this.DepartmentCourse = DepartmentCourse;
+     }
 
     @Override
     public String toString() {

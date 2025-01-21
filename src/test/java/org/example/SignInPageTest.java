@@ -17,12 +17,21 @@ public class SignInPageTest {
     @Mock
     private PreparedStatement mockPreparedStatement;
 
+    private User mockUser;
+
     @InjectMocks
     private SignInPage signInPage;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        when(mockUser.getAdmin()).thenReturn(1);
+        when(mockUser.getEmail()).thenReturn("test@example.com");
+        when(mockUser.getName()).thenReturn("Test User");
+        when(mockUser.getDirector()).thenReturn(1);
+        when(mockUser.getDepartment()).thenReturn("Informatics");
+
+        signInPage = new SignInPage(mockUser);
     }
 
     @Test
@@ -34,6 +43,10 @@ public class SignInPageTest {
         boolean isDirector = true;
         String course = "Math 101";
         boolean isMixed = false;
+        String department = "Informatics";
+        int year = 1;
+        int numberSt = 1;
+
 
         // Simulate the creation of a PreparedStatement
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
@@ -47,7 +60,7 @@ public class SignInPageTest {
         when(mockConnection.prepareStatement("INSERT INTO course (email_course, course_course, Mixed_course) VALUES (?, ?, ?)"))
                 .thenReturn(mockPreparedStatement);
 
-        boolean result = signInPage.createUser(email, password, username, isDirector, course, isMixed);
+        boolean result = signInPage.createUser(email, password, username, isDirector, course, isMixed, department, year, numberSt);
 
         assertTrue(result); // Assert that the result is true (user creation was successful)
 
@@ -59,19 +72,22 @@ public class SignInPageTest {
     @Test
     public void testCreateUser_Failure_EmailAlreadyExists() throws SQLException {
         // Arrange
-        String email = "test56@example.com";
+        String email = "test@example.com";
         String password = "password123";
         String username = "testuser";
         boolean isDirector = true;
         String course = "Math 101";
         boolean isMixed = false;
+        String department = "Informatics";
+        int year = 1;
+        int numberSt = 1;
 
         // Simulate the SQL integrity constraint violation for duplicate email
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeUpdate()).thenThrow(new SQLIntegrityConstraintViolationException("Duplicate entry"));
 
         // Act
-        boolean result = signInPage.createUser(email, password, username, isDirector, course, isMixed);
+        boolean result = signInPage.createUser(email, password, username, isDirector, course, isMixed, department, year, numberSt);
 
         // Assert
         assertFalse(result); // Assert that the user creation failed due to duplicate email
@@ -89,12 +105,15 @@ public class SignInPageTest {
         boolean isDirector = true;
         String course = "Math 101";
         boolean isMixed = false;
+        String department = "Informatics";
+        int year = 1;
+        int numberSt = 1;
 
         // Simulate an unexpected SQLException during execution
         when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Unexpected error"));
 
         // Act
-        boolean result = signInPage.createUser(email, password, username, isDirector, course, isMixed);
+        boolean result = signInPage.createUser(email, password, username, isDirector, course, isMixed, department, year, numberSt);
 
         // Assert
         assertFalse(result); // Assert that the user creation failed due to an unexpected error

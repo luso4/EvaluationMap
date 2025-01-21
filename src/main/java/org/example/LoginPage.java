@@ -13,7 +13,7 @@ public class LoginPage extends JDialog {
     private JButton logginButton;
     private JButton cancelButton;
     public User user;
-
+    //JSL
     public LoginPage(JFrame parent) {
         super(parent);
         setTitle("Login");
@@ -73,7 +73,7 @@ public class LoginPage extends JDialog {
                     new Options(user);
                     dispose();
                 } else {
-                    showErrorMessage("Invalid username or password"); //JSL 07-01-2025
+                    showErrorMessage("Invalid username or password."); //JSL 07-01-2025
                 }
             }
         });
@@ -95,10 +95,12 @@ public class LoginPage extends JDialog {
     }
 
     // Get the authenticated user from the database
-    public User getAuthenticatedUser(String email, String password) {
+   public User getAuthenticatedUser(String email, String password) {
         User user = null;
 
-        final String DB_URL = "jdbc:mariadb://192.168.76.151:3306/evaluationmap";
+
+        final String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
+
         final String USER = "userSQL";
         final String PASS = "password1";
 
