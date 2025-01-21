@@ -52,11 +52,11 @@ public class CalendarOptions extends JFrame {
         setMinimumSize(new Dimension(400, 200));
 
         CalendarSemester.addActionListener(e -> {
-            // Cria e exibe o diálogo CalendarSemester
+            // Creates and shows CalendarSemester
             CalendarSemester dialog = new CalendarSemester();
-            dialog.pack(); // Ajusta o tamanho do diálogo
-            dialog.setLocationRelativeTo(null); // Centraliza na tela
-            dialog.setVisible(true); // Torna o diálogo visível
+            dialog.pack(); // Resize dialog
+            dialog.setLocationRelativeTo(null); // Center in the screen
+            dialog.setVisible(true); // Make it visible
         });
 
 

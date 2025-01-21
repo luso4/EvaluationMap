@@ -22,13 +22,13 @@ public class CalendarSemester extends JFrame {
     private JButton submitButton;
 
     public CalendarSemester() {
-        setTitle("Definir Datas do Semestre");
+        setTitle("Define Semester dates");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(9, 2, 10, 10));
 
-        // Inicializando os componentes de data
+        // Initialization of the date components
         startDateChooser = new JDateChooser();
         endDateChooser = new JDateChooser();
         examStartDateChooser = new JDateChooser();
@@ -37,37 +37,37 @@ public class CalendarSemester extends JFrame {
         appealExamEndDateChooser = new JDateChooser();
         specialExamStartDateChooser = new JDateChooser();
         specialExamEndDateChooser = new JDateChooser();
-        submitButton = new JButton("Confirmar Datas");
+        submitButton = new JButton("Confirme dates");
 
         // Adicionando rótulos e campos à interface
-        add(new JLabel("Data de Início do Semestre:"));
+        add(new JLabel("Semester start date:"));
         add(startDateChooser);
 
-        add(new JLabel("Data de Fim do Semestre:"));
+        add(new JLabel("Semester end date:"));
         add(endDateChooser);
 
-        add(new JLabel("Início da Época Normal de Exames:"));
+        add(new JLabel("Regular exams start date:"));
         add(examStartDateChooser);
 
-        add(new JLabel("Fim da Época Normal de Exames:"));
+        add(new JLabel("Regular exams end date:"));
         add(examEndDateChooser);
 
-        add(new JLabel("Início da Época de Recurso:"));
+        add(new JLabel("Appeal exams start date:"));
         add(appealExamStartDateChooser);
 
-        add(new JLabel("Fim da Época de Recurso:"));
+        add(new JLabel("Appeal exams end date:"));
         add(appealExamEndDateChooser);
 
-        add(new JLabel("Início da Época Especial:"));
+        add(new JLabel("Special season exams start date:"));
         add(specialExamStartDateChooser);
 
-        add(new JLabel("Fim da Época Especial:"));
+        add(new JLabel("Special season exams end date:"));
         add(specialExamEndDateChooser);
 
-        add(new JLabel("")); // Espaço vazio para alinhamento
+        add(new JLabel("")); // Empty spac for aligning
         add(submitButton);
 
-        // Listener para o botão de submissão
+        // Listener for submission button
         submitButton.addActionListener(this::handleSubmission);
 
         setVisible(true);
@@ -93,42 +93,42 @@ public class CalendarSemester extends JFrame {
         if (startDate == null || endDate == null || examStartDate == null || examEndDate == null ||
                 appealExamStartDate == null || appealExamEndDate == null || specialExamStartDate == null ||
                 specialExamEndDate == null) {
-            JOptionPane.showMessageDialog(this, "Por favor, preencha todas as datas.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter all the dates.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (endDate.before(new Date(startDate.getTime() + 30L * 24 * 60 * 60 * 1000))) {
-            JOptionPane.showMessageDialog(this, "A data de fim do semestre deve ser pelo menos um mês após o início.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "The end date must be at least 1 month after the starting date.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (examStartDate.before(startDate)) {
-            JOptionPane.showMessageDialog(this, "A data de início da época normal de exames não pode ser antes do início do semestre.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Regular exams start date can not be before the start of the semester.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (examEndDate.before(new Date(examStartDate.getTime() + 7L * 24 * 60 * 60 * 1000))) {
-            JOptionPane.showMessageDialog(this, "A data de fim da época normal de exames deve ser pelo menos uma semana após o início.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Regular exames end date must be at least 1 week after the starting date.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (appealExamStartDate.before(examEndDate)) {
-            JOptionPane.showMessageDialog(this, "A data de início da época de recurso não pode ser antes do fim da época normal de exames.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Appeal exams date can not be befoe the regular exams ending date.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (appealExamEndDate.before(new Date(appealExamStartDate.getTime() + 14L * 24 * 60 * 60 * 1000))) {
-            JOptionPane.showMessageDialog(this, "A data de fim da época de recurso deve ser pelo menos duas semanas após o início.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Appeal exams end date should be at least 2 weeks after the starting date.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (specialExamStartDate.before(appealExamEndDate)) {
-            JOptionPane.showMessageDialog(this, "A data de início da época especial não pode ser antes do fim da época de recurso.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Special season exams star date can not be before appeal exams ending date.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (specialExamEndDate.before(new Date(specialExamStartDate.getTime() + 14L * 24 * 60 * 60 * 1000))) {
-            JOptionPane.showMessageDialog(this, "A data de fim da época especial deve ser pelo menos duas semanas após o início.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Special season exams end date must be at least 2 weeks after the starting date.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -136,30 +136,30 @@ public class CalendarSemester extends JFrame {
     }
 
     private void saveDatesToDatabase() {
-        // Configuração da conexão com o banco de dados
-        String url = "jdbc:mariadb://192.168.76.151:3306/evaluationmap"; // Substitua pelo nome do seu banco de dados
-        String username = "userSQL"; // Substitua pelo seu usuário
-        String password = "password1"; // Substitua pela sua senha
+        // Database connection config
+        String url = "jdbc:mariadb://192.168.76.151:3306/evaluationmap";
+        String username = "userSQL";
+        String password = "password1";
 
-        // Consulta SQL para inserir as datas
+        // Consults SQL to insert dates
         String insertQuery = "INSERT INTO tabela_das_datas (descricao, data) VALUES (?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
 
-            saveDate(preparedStatement, "Início do Semestre", startDateChooser.getDate());
-            saveDate(preparedStatement, "Fim do Semestre", endDateChooser.getDate());
-            saveDate(preparedStatement, "Início da Época Normal de Exames", examStartDateChooser.getDate());
-            saveDate(preparedStatement, "Fim da Época Normal de Exames", examEndDateChooser.getDate());
-            saveDate(preparedStatement, "Início da Época de Recurso", appealExamStartDateChooser.getDate());
-            saveDate(preparedStatement, "Fim da Época de Recurso", appealExamEndDateChooser.getDate());
-            saveDate(preparedStatement, "Início da Época Especial", specialExamStartDateChooser.getDate());
-            saveDate(preparedStatement, "Fim da Época Especial", specialExamEndDateChooser.getDate());
+            saveDate(preparedStatement, "Semesters Start", startDateChooser.getDate());
+            saveDate(preparedStatement, "Semesters End", endDateChooser.getDate());
+            saveDate(preparedStatement, "Regular exams Start", examStartDateChooser.getDate());
+            saveDate(preparedStatement, "Regular exams End", examEndDateChooser.getDate());
+            saveDate(preparedStatement, "Appeal exams Start", appealExamStartDateChooser.getDate());
+            saveDate(preparedStatement, "Appeal exams End", appealExamEndDateChooser.getDate());
+            saveDate(preparedStatement, "Special season Start", specialExamStartDateChooser.getDate());
+            saveDate(preparedStatement, "Special season End", specialExamEndDateChooser.getDate());
 
-            JOptionPane.showMessageDialog(this, "Datas inseridas com sucesso no banco de dados!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Success inserting date in the database!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao salvar as datas no banco de dados!", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error saving dates to the database!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
