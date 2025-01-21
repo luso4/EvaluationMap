@@ -4,25 +4,21 @@ import javax.swing.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+
 import static org.mockito.Mockito.*;
 
 public class LoginPageTest {
 
-    @Mock
     private JFrame parentFrame;
-
-    @Mock
-    private JOptionPane mockOptionPane;
-
     private LoginPage loginPage;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this); // Initialize mocks
-        loginPage = new LoginPage(parentFrame);
+        parentFrame = new JFrame(); // Real JFrame instance
+        loginPage = spy(new LoginPage(parentFrame)); // Create a spy on the real LoginPage
 
-        // Mocking showErrorMessage directly (instead of trying to mock JOptionPane)
-        doNothing().when(loginPage).showErrorMessage(anyString());
+        // Mocking showErrorMessage using the spy
+        doNothing().when(loginPage).showErrorMessage(anyString()); // No action for this method
     }
 
     @Test
@@ -30,16 +26,27 @@ public class LoginPageTest {
         String email = "";
         String password = "";
 
-        // Use Mockito to mock JOptionPane
-        JOptionPane mockOptionPane = mock(JOptionPane.class);
+        loginPage.getAuthenticatedUser(email, password);
 
-        // Use Mockito to simulate the JOptionPane behavior
-        doNothing().when(mockOptionPane).showMessageDialog(any(), anyString(), anyString(), anyInt());
+        // Verify that showErrorMessage() is called with the expected message
+        verify(loginPage).showErrorMessage(eq("Please enter both email and password."));
+    }
+    @Test
+    public void testInvalidCredentials() {
+        String email = "4";
+        String password = "test";
+        loginPage.getAuthenticatedUser(email, password);
+        verify(loginPage).showErrorMessage(eq("Invalid username or password"));
+    }
+    @Test
+    public void testValidCredentials() {
+        String email = "4"; // Valid username
+        String password = "4"; // Valid password
 
         loginPage.getAuthenticatedUser(email, password);
 
-        // Verify JOptionPane's showMessageDialog is called
-        verify(mockOptionPane).showMessageDialog(any(), eq("Please enter both email and password."), eq("Error"), eq(JOptionPane.ERROR_MESSAGE));
+        // No error message should be shown for valid credentials, so verify it isn't called
+        verify(loginPage, never()).showErrorMessage(anyString());
     }
 
     // Other test methods...

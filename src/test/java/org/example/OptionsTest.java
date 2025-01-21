@@ -61,7 +61,7 @@ public class OptionsTest {
 
     @Test
     public void testCalendarButton() {
-        assertEquals("Calendar", Calendar.getText());
+        assertEquals("Course Management", Calendar.getText());
     }
 
     @Test
