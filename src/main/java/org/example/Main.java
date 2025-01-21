@@ -7,9 +7,11 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) {
         // Database credentials
+
          String DB_URL = "jdbc:mariadb://192.168.131.151:3306/evaluationmap";
          String DB_USER = "userSQL";
          String DB_PASS = "password1";
+
 
         // Establish connection to the database A
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {

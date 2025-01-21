@@ -237,6 +237,7 @@ public class CreateAssessment extends JFrame {
     }
 
 
+
     // Database URL, user, and password
     public static final String DB_URL = "jdbc:mariadb://192.168.1.248:3306/evaluationmap";
 

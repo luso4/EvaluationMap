@@ -46,10 +46,14 @@ public class CalendarOptions extends JFrame {
         setContentPane(panel1);
         setMinimumSize(new Dimension(400, 200));
 
-        // Action listener for UserManagement button
         CalendarSemester.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Option 1 clicked");
+            // Creates and shows CalendarSemester
+            CalendarSemester dialog = new CalendarSemester();
+            dialog.pack(); // Resize dialog
+            dialog.setLocationRelativeTo(null); // Center in the screen
+            dialog.setVisible(true); // Make it visible
         });
+
 
         // Action listener for Calendar button
         CalendarCourse.addActionListener(e -> {
