@@ -73,7 +73,7 @@ public class SelectionCourse extends JFrame {
         setVisible(true);
     }
 
-    public String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
+    public String DB_URL = "jdbc:mariadb://192.168.76.151:3306/evaluationmap";
     public String DB_USER = "userSQL";
     public String DB_PASS = "password1";
     // Method to populate the JComboBox with courses from the database

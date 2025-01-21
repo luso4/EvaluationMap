@@ -198,7 +198,7 @@ public class SignInPage extends JDialog {
     public boolean createUser(String email, String password, String username, boolean isDirector, String course, boolean isMixed, String department, int year, int numberSt) {
 
   
-        final String DB_URL = "jdbc:mariadb://192.168.153.151:3306/evaluationmap";
+        final String DB_URL = "jdbc:mariadb://192.168.76.151:3306/evaluationmap";
         final String DB_USER = "userSQL";
         final String DB_PASS = "password1";
 
