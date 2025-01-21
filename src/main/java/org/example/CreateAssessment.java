@@ -28,6 +28,8 @@ public class CreateAssessment extends JFrame {
     private User user;
     private Course course;
     private Assessment assessment;
+    private JComboBox<Integer> hourComboBox;
+    private JComboBox<Integer> minuteComboBox;
 
     public CreateAssessment(User user, Course course, Assessment assessment) {
         this.user = user;
@@ -118,7 +120,7 @@ public class CreateAssessment extends JFrame {
         gbc.gridy = 5;
         panel1.add(new JLabel("Hour"), gbc);
 
-        JComboBox<Integer> hourComboBox = new JComboBox<>();
+        hourComboBox = new JComboBox<>();
         for (int i = 0; i <= 24; i++) {
             hourComboBox.addItem(i);
         }
@@ -130,7 +132,7 @@ public class CreateAssessment extends JFrame {
         gbc.gridy = 6;
         panel1.add(new JLabel("Minute"), gbc);
 
-        JComboBox<Integer> minuteComboBox = new JComboBox<>();
+        minuteComboBox = new JComboBox<>();
         for (int i = 0; i < 60; i++) {
             minuteComboBox.addItem(i);
         }
@@ -303,6 +305,8 @@ public class CreateAssessment extends JFrame {
         String selectedRoom = (String) roomComboBox.getSelectedItem();
         int course_room = Integer.parseInt(selectedRoom);
         int assessment_mandatory = yesMandatory.isSelected() ? 1 : 0;
+        int assessment_hour = (Integer) hourComboBox.getSelectedItem();
+        int assessment_minute = (Integer) minuteComboBox.getSelectedItem();
 
         // IF it is being altered
         if (assessment != null) {
@@ -317,6 +321,8 @@ public class CreateAssessment extends JFrame {
                         "assessment_course_required_room_computer = ?, " +
                         "assessment_course_room = ?, " +
                         "assessment_course_mandatory = ? " +
+                        "assessment_course_hour = ?, " +
+                        "assessment_course_minute = ?, " +
                         "WHERE assessment_course_date = ?";
 
                 try (PreparedStatement pstmt1 = conn.prepareStatement(updateQuery)) {
@@ -329,7 +335,9 @@ public class CreateAssessment extends JFrame {
                     pstmt1.setInt(7, required_room_computer);
                     pstmt1.setInt(8, course_room);
                     pstmt1.setInt(9, assessment_mandatory);
-                    pstmt1.setString(10, assessment.getAssessment_course_date());  // The value for WHERE clause
+                    pstmt1.setInt(10, assessment_hour);
+                    pstmt1.setInt(11, assessment_minute);
+                    pstmt1.setString(12, assessment.getAssessment_course_date());  // The value for WHERE clause
 
                     pstmt1.executeUpdate();
 
@@ -360,7 +368,7 @@ public class CreateAssessment extends JFrame {
                         "assessment_course_assessment, assessment_course_percentage, " +
                         "assessment_course_date, assessment_course_required_room, " +
                         "assessment_course_required_room_computer, assessment_course_room, " +
-                        "assessment_course_mandatory) VALUES (?,?,?,?,?,?,?,?,?)")) {
+                        "assessment_course_mandatory, assessment_course_hour, assessment_course_minute) VALUES (?,?,?,?,?,?,?,?,?)")) {
 
                     pstmt1.setString(1, email_user);
                     pstmt1.setString(2, course_course);
@@ -371,6 +379,8 @@ public class CreateAssessment extends JFrame {
                     pstmt1.setInt(7, required_room_computer);
                     pstmt1.setInt(8, course_room);
                     pstmt1.setInt(9, assessment_mandatory);
+                    pstmt1.setInt(10, assessment_hour);
+                    pstmt1.setInt(11, assessment_minute);
 
                     pstmt1.executeUpdate();
                 }

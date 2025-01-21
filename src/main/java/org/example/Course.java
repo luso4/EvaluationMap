@@ -11,7 +11,7 @@ public class Course {
     private String DepartmentCourse;
 
     // Constructor
-    public Course(String courseCourse, int courseAssessmentNr, int studentNrCourse, int mixedcourse, int assessmentMandatoryNumberCourse, int percentageCourse, int yearCourse, String DepartmentCOurse) {
+    public Course(String courseCourse, int courseAssessmentNr, int studentNrCourse, int mixedcourse, int assessmentMandatoryNumberCourse, int percentageCourse, int yearCourse, String DepartmentCourse) {
         this.courseCourse = courseCourse;
         this.courseAssessmentNr = courseAssessmentNr;
         this.studentNrCourse = studentNrCourse;
@@ -19,7 +19,7 @@ public class Course {
         this.assessmentMandatoryNumberCourse = assessmentMandatoryNumberCourse;
         this.percentageCourse = percentageCourse;
         this.yearCourse = yearCourse;
-        this.DepartmentCourse = DepartmentCOurse;
+        this.DepartmentCourse = DepartmentCourse;
     }
 
     public String getcourseCourse() {
