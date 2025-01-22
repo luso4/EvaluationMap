@@ -1,5 +1,5 @@
-/*
-// package org.example;
+
+package org.example;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,15 +40,16 @@ class CourseMaintenanceTest {
         // Creating instance of CourseMaintenance with mocked user
         courseMaintenance = new CourseMaintenance(mockUser);
 
-        // Accessing the private emailComboBox field using reflection
-        Field emailComboBoxField = CourseMaintenance.class.getDeclaredField("emailComboBox");
-        emailComboBoxField.setAccessible(true); // Allow access to the private field
-        emailComboBoxField.set(courseMaintenance, mockEmailComboBox); // Set the mock combo box
+        try (MockedStatic<DriverManager> driverManagerMock = mockStatic(DriverManager.class)) {
+            driverManagerMock.when(() -> DriverManager.getConnection(anyString(), anyString(), anyString()))
+                    .thenReturn(mockConnection);
 
-        // Access the private panel1 field using reflection
-        Field panel1Field = CourseMaintenance.class.getDeclaredField("panel1");
-        panel1Field.setAccessible(true); // Allow access to the private field
-        panel1Field.set(courseMaintenance, new JPanel()); // Set a mock panel1
+            // Now the populateEmailComboBox() method should use the mocked connection
+            courseMaintenance.populateEmailComboBox();
+        }
+
+        // Verifying interaction with the mock
+        verify(mockResultSet, times(1)).getString("email");
     }
 
     // Test for adding a course to the user
@@ -56,10 +57,16 @@ class CourseMaintenanceTest {
     void testAddCourseToUser() throws SQLException {
         // Given
         String email = "test@example.com";
+        String password = "password123";
+        String username = "testuser";
+        boolean isDirector = true;
         String courseName = "Math 101";
-        boolean isMixed = true;
+        boolean isMixed = false;
+        String department = "Informatics";
+        int year = 1;
+        int numberSt = 1;
 
-        courseMaintenance.addCourseToUser(email, courseName, isMixed);
+        courseMaintenance.addCourseToUser(email, courseName, isMixed, year, department, numberSt);
 
         verify(mockPreparedStatement, times(1)).setString(1, email);
         verify(mockPreparedStatement, times(1)).setString(2, courseName);
@@ -120,7 +127,7 @@ class CourseMaintenanceTest {
 
         int result = JOptionPane.showConfirmDialog(panel1, inputPanel, "Add New Course", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
-            assertThrows(SQLException.class, () -> courseMaintenance.addCourseToUser("test@example.com", "", false));
+            assertThrows(SQLException.class, () -> courseMaintenance.addCourseToUser("test@example.com", "Java", true,1,"informatics",50));
         }
     }
 
@@ -151,4 +158,3 @@ class CourseMaintenanceTest {
         verify(mockPreparedStatement).executeUpdate();
     }
 }
-*/
